@@ -6,7 +6,7 @@ import { authConfig } from './auth.config';
 async function login(email: string, password: string) {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/login`,
       {
         body: JSON.stringify({
           email,
@@ -26,7 +26,7 @@ async function login(email: string, password: string) {
     return await response.json();
   } catch (error) {
     console.log(`${login.name} error: `, error);
-    return null;
+    return {};
   }
 }
 

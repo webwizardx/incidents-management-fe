@@ -15,17 +15,8 @@ export default function Login() {
         <div className='mx-auto w-full max-w-sm lg:w-96'>
           <div>
             <h2 className='mt-8 text-2xl font-bold leading-9 tracking-tight text-gray-900'>
-              Sign in to your account
+              Inicia sesión en tu cuenta
             </h2>
-            <p className='mt-2 text-sm leading-6 text-gray-500'>
-              Not a member?{' '}
-              <a
-                href='#'
-                className='font-semibold text-indigo-600 hover:text-indigo-500'
-              >
-                Signup now
-              </a>
-            </p>
           </div>
 
           <div className='mt-10'>
@@ -36,7 +27,7 @@ export default function Login() {
                     htmlFor='email'
                     className='block text-sm font-medium leading-6 text-gray-900'
                   >
-                    Email address
+                    Dirección de correo electrónico
                   </label>
                   <div className='mt-2'>
                     <input
@@ -55,7 +46,7 @@ export default function Login() {
                     htmlFor='password'
                     className='block text-sm font-medium leading-6 text-gray-900'
                   >
-                    Password
+                    Contraseña
                   </label>
                   <div className='mt-2'>
                     <input
@@ -81,7 +72,7 @@ export default function Login() {
                       htmlFor='remember-me'
                       className='ml-3 block text-sm leading-6 text-gray-700'
                     >
-                      Remember me
+                      Recuérdame
                     </label>
                   </div>
 
@@ -90,7 +81,7 @@ export default function Login() {
                       href='#'
                       className='font-semibold text-indigo-600 hover:text-indigo-500'
                     >
-                      Forgot password?
+                      ¿Olvidaste tu contraseña?
                     </a>
                   </div>
                 </div>
@@ -101,7 +92,7 @@ export default function Login() {
                     type='submit'
                     className='flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
                   >
-                    Sign in
+                    Iniciar sesión
                   </button>
                   <div
                     className='flex h-8 items-end space-x-1'
@@ -112,7 +103,7 @@ export default function Login() {
                       <>
                         <ExclamationCircleIcon className='h-5 w-5 text-red-500' />
                         <p className='text-sm text-red-500'>
-                          Invalid credentials
+                          Credenciales inválidas
                         </p>
                       </>
                     )}
