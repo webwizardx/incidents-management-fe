@@ -23,13 +23,14 @@ import {
 } from '@heroicons/react/24/outline';
 import { Session } from 'next-auth';
 import Image from 'next/image';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Fragment, useState } from 'react';
 
 const navigation = [
-  { href: '#', icon: TicketIcon, name: 'Incidencias', path: '/dashboard' },
-  { href: '#', icon: ChartPieIcon, name: 'Reportes', path: '/reports' },
-  { href: '#', icon: UsersIcon, name: 'Usuarios', path: '/users' },
+  { href: '/dashboard', icon: TicketIcon, name: 'Incidencias' },
+  { href: '#', icon: ChartPieIcon, name: 'Reportes' },
+  { href: '/users', icon: UsersIcon, name: 'Usuarios' },
 ];
 
 type Props = {
@@ -108,10 +109,10 @@ export default function Sidebar({ session }: Props) {
                         <ul role='list' className='-mx-2 space-y-1'>
                           {navigation.map((item) => (
                             <li key={item.name}>
-                              <a
+                              <Link
                                 href={item.href}
                                 className={classNames(
-                                  pathname.includes(item.path)
+                                  pathname.includes(item.href)
                                     ? 'bg-gray-800 text-white'
                                     : 'text-gray-400 hover:bg-gray-800 hover:text-white',
                                   'group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6'
@@ -122,7 +123,7 @@ export default function Sidebar({ session }: Props) {
                                   aria-hidden='true'
                                 />
                                 {item.name}
-                              </a>
+                              </Link>
                             </li>
                           ))}
                         </ul>
@@ -165,10 +166,10 @@ export default function Sidebar({ session }: Props) {
                 <ul role='list' className='-mx-2 space-y-1'>
                   {navigation.map((item) => (
                     <li key={item.name}>
-                      <a
+                      <Link
                         href={item.href}
                         className={classNames(
-                          pathname.includes(item.path)
+                          pathname.includes(item.href)
                             ? 'bg-gray-800 text-white'
                             : 'text-gray-400 hover:bg-gray-800 hover:text-white',
                           'group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6'
@@ -179,7 +180,7 @@ export default function Sidebar({ session }: Props) {
                           aria-hidden='true'
                         />
                         {item.name}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>

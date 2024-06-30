@@ -26,6 +26,7 @@ export const authConfig = {
     async jwt({ token, user }) {
       if (user) {
         token.accessToken = (user as any).accessToken;
+        token.role = (user as any).role;
       }
 
       return token;
@@ -33,10 +34,11 @@ export const authConfig = {
     async session({ session, token }) {
       if (token) {
         const user = (session.user as any) || {};
-        user.id = token.sub || '';
-        user.name = token.name;
-        user.email = token.email;
         user.accessToken = token.accessToken;
+        user.email = token.email;
+        user.id = Number(token.sub) || '';
+        user.name = token.name;
+        user.role = token.role;
         session.user = user;
       }
       return session;
@@ -45,6 +47,6 @@ export const authConfig = {
   providers: [], // Add providers with an empty array for now
   session: {
     strategy: 'jwt',
-    maxAge: 30 * 24 * 60 * 60,
+    maxAge: 24 * 60 * 60, // 1 day
   },
 } satisfies NextAuthConfig;

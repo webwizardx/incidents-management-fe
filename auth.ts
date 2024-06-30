@@ -1,8 +1,10 @@
+'use server';
+
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
+import { cookies } from 'next/headers';
 import { z } from 'zod';
 import { authConfig } from './auth.config';
-
 async function login(email: string, password: string) {
   try {
     const response = await fetch(
@@ -42,11 +44,13 @@ export const { auth, signIn, signOut } = NextAuth({
           const { email, password } = parsedCredentials.data;
           const { access_token, user } = await login(email, password);
           if (!user) return null;
+          cookies().set('accessToken', access_token);
           return {
-            id: user.userId,
+            id: user.id,
             name: `${user.firstName} ${user.lastName}`,
             email: user.email,
             accessToken: access_token,
+            role: user.role,
           };
         }
         return null;

@@ -16,7 +16,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html className='h-full bg-white' lang='en'>
+    <html className='h-full bg-white' lang='en' suppressHydrationWarning={true}>
       <body className={`h-full ${inter.className}`}>{children}</body>
     </html>
   );
