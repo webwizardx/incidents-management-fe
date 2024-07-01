@@ -1,17 +1,25 @@
+'use server';
+
 import { PaginatedResponse } from '@/app/types';
-import { cleanObject, customFetch } from '@/helpers';
+import { cleanObject } from '@/helpers';
+import { revalidatePath } from 'next/cache';
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 import { QueryRole, QueryUser, Role, User } from './types';
 
 export async function createUser(
   payload: Omit<User, 'id' | 'role'>
 ): Promise<User> {
   try {
+    const cookie = headers().get('cookie') as string;
     const cleanedPayload = cleanObject(payload);
     const url = new URL(`${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/users`);
-
     const response = await fetch(url.toString(), {
       body: JSON.stringify(cleanedPayload),
       cache: 'no-store',
+      headers: {
+        cookie,
+      },
       method: 'POST',
     });
 
@@ -22,11 +30,18 @@ export async function createUser(
     if (!response.ok) {
       Promise.reject(data);
     }
-
+    revalidatePath('/users');
     return data;
   } catch (error) {
-    console.error(`[${createUser.name}] ERROR - ${JSON.stringify(error)}`);
+    console.error(
+      `[${createUser.name}] ERROR - ${JSON.stringify(
+        error,
+        Object.getOwnPropertyNames(error)
+      )}`
+    );
     return null as any;
+  } finally {
+    redirect('/users');
   }
 }
 
@@ -34,12 +49,16 @@ export async function getRoles(
   query: QueryRole = {}
 ): Promise<PaginatedResponse<Role>> {
   try {
+    const cookie = headers().get('cookie') as string;
     const url = new URL(`${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/roles`);
     url.search = new URLSearchParams(query as any).toString();
 
-    let response;
-
-    response = await fetch(url.toString(), { cache: 'no-store' });
+    const response = await fetch(url.toString(), {
+      cache: 'no-store',
+      headers: {
+        cookie,
+      },
+    });
 
     console.log(`[${getRoles.name}] - ${url.toString()}`);
 
@@ -55,16 +74,48 @@ export async function getRoles(
   }
 }
 
+export async function getUser(id: number): Promise<User> {
+  try {
+    const cookie = headers().get('cookie') as string;
+    const url = new URL(
+      `${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/users/${id}`
+    );
+
+    const response = await fetch(url.toString(), {
+      cache: 'no-store',
+      headers: {
+        cookie,
+      },
+    });
+
+    console.log(`[${getUser.name}] - ${url.toString()}`);
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      Promise.reject(data);
+    }
+    return data;
+  } catch (error) {
+    console.error(`[${getUser.name}] ERROR - ${JSON.stringify(error)}`);
+    return null as any;
+  }
+}
+
 export async function getUsers(
   query: QueryUser = {}
 ): Promise<PaginatedResponse<User>> {
   try {
+    const cookie = headers().get('cookie') as string;
     const url = new URL(`${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/users`);
     url.search = new URLSearchParams(query as any).toString();
 
-    let response;
-
-    response = await fetch(url.toString(), { cache: 'no-store' });
+    const response = await fetch(url.toString(), {
+      cache: 'no-store',
+      headers: {
+        cookie,
+      },
+    });
 
     console.log(`[${getUsers.name}] - ${url.toString()}`);
 
@@ -80,50 +131,12 @@ export async function getUsers(
   }
 }
 
-export async function getUsersV2({
-  isBrowserCall = false,
-  query = {},
-}: {
-  query: QueryUser;
-  isBrowserCall: boolean;
-}): Promise<PaginatedResponse<User>> {
-  try {
-    const url = new URL(
-      `${
-        isBrowserCall
-          ? process.env.NEXT_PUBLIC_INTERNAL_API_URL
-          : process.env.NEXT_PUBLIC_API_BASE_URL
-      }${isBrowserCall ? '' : '/api'}/users`
-    );
-    url.search = new URLSearchParams(query as any).toString();
-
-    let response;
-
-    if (isBrowserCall) {
-      response = await fetch(url.toString(), { cache: 'no-store' });
-    } else {
-      response = await customFetch(url.toString(), { cache: 'no-store' });
-    }
-
-    console.log(`[${getUsersV2.name}] - ${url.toString()}`);
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      Promise.reject(data);
-    }
-    return data;
-  } catch (error) {
-    console.error(`[${getUsersV2.name}] ERROR - ${JSON.stringify(error)}`);
-    return null as any;
-  }
-}
-
 export async function updateUser(
   id: number,
   payload: Partial<Omit<User, 'id' | 'role'>>
 ): Promise<User> {
   try {
+    const cookie = headers().get('cookie') as string;
     const cleanedPayload = cleanObject(payload);
     const url = new URL(
       `${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/users/${id}`
@@ -132,6 +145,9 @@ export async function updateUser(
     const response = await fetch(url.toString(), {
       body: JSON.stringify(cleanedPayload),
       cache: 'no-store',
+      headers: {
+        cookie,
+      },
       method: 'PUT',
     });
 
@@ -142,22 +158,66 @@ export async function updateUser(
     if (!response.ok) {
       Promise.reject(data);
     }
-
+    revalidatePath('/users');
     return data;
   } catch (error) {
     console.error(`[${updateUser.name}] ERROR - ${JSON.stringify(error)}`);
     return null as any;
+  } finally {
+    redirect('/users');
+  }
+}
+
+export async function patchUser(
+  id: number,
+  payload: Partial<Omit<User, 'id' | 'role'>>
+): Promise<User> {
+  try {
+    const cookie = headers().get('cookie') as string;
+    const cleanedPayload = cleanObject(payload);
+    const url = new URL(
+      `${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/users/${id}`
+    );
+
+    const response = await fetch(url.toString(), {
+      body: JSON.stringify(cleanedPayload),
+      cache: 'no-store',
+      headers: {
+        cookie,
+      },
+      method: 'PATCH',
+    });
+
+    console.log(`[${patchUser.name}] - ${url.toString()}`);
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      Promise.reject(data);
+    }
+
+    revalidatePath('/users');
+    return data;
+  } catch (error) {
+    console.error(`[${patchUser.name}] ERROR - ${JSON.stringify(error)}`);
+    return null as any;
+  } finally {
+    redirect('/users');
   }
 }
 
 export async function deleteUser(id: number): Promise<User> {
   try {
+    const cookie = headers().get('cookie') as string;
     const url = new URL(
       `${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/users/${id}`
     );
 
     const response = await fetch(url.toString(), {
       cache: 'no-store',
+      headers: {
+        cookie,
+      },
       method: 'DELETE',
     });
 
@@ -169,9 +229,12 @@ export async function deleteUser(id: number): Promise<User> {
       Promise.reject(data);
     }
 
+    revalidatePath('/users');
     return data;
   } catch (error) {
     console.error(`[${deleteUser.name}] ERROR - ${JSON.stringify(error)}`);
     return null as any;
+  } finally {
+    redirect('/users');
   }
 }

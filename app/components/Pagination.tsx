@@ -7,19 +7,21 @@ import {
   ChevronDoubleLeftIcon,
   ChevronDoubleRightIcon,
 } from '@heroicons/react/24/outline';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useMemo } from 'react';
 
 export type Props = {
   query: Query;
-  setQuery: (query: Query | ((query: Query) => Query)) => void;
   totalCount: number;
 };
 
 export default function Pagination({
   query: { limit, page },
-  setQuery,
   totalCount = 0,
 }: Props) {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const { replace } = useRouter();
   const isFirstPage = page === 1;
   const isLastPage = page * limit >= totalCount ? true : false;
   const fromValue = page && limit ? page * limit - limit + 1 : 0;
@@ -40,30 +42,32 @@ export default function Pagination({
     return pages;
   }, [page, totalCount, limit]);
 
+  function setPage(page?: number) {
+    const params = new URLSearchParams(searchParams);
+
+    if (page) {
+      params.set('page', String(page));
+    } else {
+      params.delete('page');
+    }
+
+    replace(`${pathname}?${params.toString()}`);
+  }
+
   return (
     <div className='sticky left-0 flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 md:static'>
       <div className='flex flex-1 justify-between sm:hidden'>
         <button
           className='relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50'
           disabled={isFirstPage}
-          onClick={() =>
-            setQuery((prevQuery: Query) => ({
-              ...prevQuery,
-              page: page - 1,
-            }))
-          }
+          onClick={() => setPage(page - 1)}
         >
           Previous
         </button>
         <button
           className='relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50'
           disabled={isLastPage}
-          onClick={() =>
-            setQuery((prevQuery: Query) => ({
-              ...prevQuery,
-              page: page + 1,
-            }))
-          }
+          onClick={() => setPage(page + 1)}
         >
           Next
         </button>
@@ -87,9 +91,7 @@ export default function Pagination({
                 isFirstPage ? 'cursor-not-allowed' : ''
               )}
               disabled={isFirstPage}
-              onClick={() =>
-                setQuery((prevQuery: Query) => ({ ...prevQuery, page: 1 }))
-              }
+              onClick={() => setPage()}
             >
               <span className='sr-only'>Previous</span>
               <ChevronDoubleLeftIcon className='h-5 w-5' aria-hidden='true' />
@@ -100,12 +102,7 @@ export default function Pagination({
                 isFirstPage ? 'cursor-not-allowed' : ''
               )}
               disabled={isFirstPage}
-              onClick={() =>
-                setQuery((prevQuery: Query) => ({
-                  ...prevQuery,
-                  page: page - 1,
-                }))
-              }
+              onClick={() => setPage(page - 1)}
             >
               <span className='sr-only'>Previous</span>
               <ChevronLeftIcon className='h-5 w-5' aria-hidden='true' />
@@ -121,12 +118,7 @@ export default function Pagination({
                     : 'bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0'
                 )}
                 key={`pagination-page-${pageValue}`}
-                onClick={() =>
-                  setQuery((prevQuery: Query) => ({
-                    ...prevQuery,
-                    page: pageValue,
-                  }))
-                }
+                onClick={() => setPage(pageValue === 1 ? undefined : pageValue)}
               >
                 {pageValue}
               </button>
@@ -137,12 +129,7 @@ export default function Pagination({
                 isLastPage ? 'cursor-not-allowed' : ''
               )}
               disabled={isLastPage}
-              onClick={() =>
-                setQuery((prevQuery: Query) => ({
-                  ...prevQuery,
-                  page: page + 1,
-                }))
-              }
+              onClick={() => setPage(page + 1)}
             >
               <span className='sr-only'>Next</span>
               <ChevronRightIcon className='h-5 w-5' aria-hidden='true' />
@@ -153,12 +140,7 @@ export default function Pagination({
                 isLastPage ? 'cursor-not-allowed' : ''
               )}
               disabled={isLastPage}
-              onClick={() =>
-                setQuery((prevQuery: Query) => ({
-                  ...prevQuery,
-                  page: lastPage,
-                }))
-              }
+              onClick={() => setPage(lastPage)}
             >
               <span className='sr-only'>Next</span>
               <ChevronDoubleRightIcon className='h-5 w-5' aria-hidden='true' />

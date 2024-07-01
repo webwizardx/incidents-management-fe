@@ -1,5 +1,5 @@
 import { auth } from '@/auth';
-import { Sidebar } from './components';
+import { Sidebar } from '../components';
 export default async function SystemLayout({
   children,
 }: {
