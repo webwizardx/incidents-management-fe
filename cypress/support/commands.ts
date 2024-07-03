@@ -43,6 +43,6 @@ Cypress.Commands.add('login', (email, password) => {
     cy.get('#email').type(email ?? user.email);
     cy.get('#password').type(password ?? user.password);
     cy.get('button[type="submit"]').click();
-    cy.url({ timeout: 10000 }).should('contain', '/dashboard');
+    cy.url({ timeout: 10000 }).should('contain', '/incidents');
   });
 });

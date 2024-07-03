@@ -4,6 +4,6 @@ export const metadata: Metadata = {
   title: 'Incidencias',
 };
 
-export default function Dashboard() {
-  return <h1>Dashboard</h1>;
+export default function Incidents() {
+  return <h1>Incidentes</h1>;
 }

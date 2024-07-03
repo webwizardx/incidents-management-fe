@@ -13,7 +13,7 @@ export const authConfig = {
 
       if (PUBLIC_PAGES.includes(request.nextUrl.pathname)) {
         if (isLoggedIn) {
-          return NextResponse.redirect(`${process.env.BASE_URL}/dashboard`);
+          return NextResponse.redirect(`${process.env.BASE_URL}/incidents`);
         }
         return true;
       }

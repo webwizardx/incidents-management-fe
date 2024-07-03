@@ -10,10 +10,10 @@ describe('Unauthenticated', () => {
 });
 
 describe('Authenticated', () => {
-  it('should be redirected to /dashboard page', () => {
+  it('should be redirected to /incidents page', () => {
     cy.login();
     cy.visit('/login');
-    cy.url().should('contain', '/dashboard');
+    cy.url().should('contain', '/incidents');
   });
 
   it('should successfully logout', () => {

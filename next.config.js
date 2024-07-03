@@ -14,7 +14,7 @@ const nextConfig = {
     dangerouslyAllowSVG: true,
   },
   async redirects() {
-    return [{ source: '/', destination: '/dashboard', permanent: false }];
+    return [{ source: '/', destination: '/incidents', permanent: false }];
   },
 };
 

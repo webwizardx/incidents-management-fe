@@ -10,7 +10,6 @@ async function getAccessToken() {
     const session: any = await auth();
     accessToken = session?.user?.accessToken;
   }
-
   return accessToken;
 }
 

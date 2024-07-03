@@ -26,19 +26,102 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Fragment, useState } from 'react';
+import { Action } from '../enum/action.enum';
+import {
+  CheckCurrentPermissionsQuery,
+  GetUserPermissionsResponse,
+} from '../login/types';
 
-const navigation = [
-  { href: '/dashboard', icon: TicketIcon, name: 'Incidencias' },
-  { href: '#', icon: ChartPieIcon, name: 'Reportes' },
-  { href: '/users', icon: UsersIcon, name: 'Usuarios' },
+const navigation: {
+  href: string;
+  icon: any;
+  name: string;
+  requiredPermissions?: CheckCurrentPermissionsQuery[];
+}[] = [
+  {
+    href: '/incidents',
+    icon: TicketIcon,
+    name: 'Incidencias',
+  },
+  {
+    href: '#',
+    icon: ChartPieIcon,
+    name: 'Reportes',
+  },
+  {
+    href: '/users',
+    icon: UsersIcon,
+    name: 'Usuarios',
+    requiredPermissions: [
+      {
+        action: Action.Manage,
+        subject: 'users',
+      },
+    ],
+  },
 ];
 
 type Props = {
+  permissions?: GetUserPermissionsResponse[];
   session: Session | null;
 };
 
-export default function Sidebar({ session }: Props) {
+export function NavigationLinks({
+  permissions = [],
+}: Pick<Props, 'permissions'>) {
   const pathname = usePathname();
+
+  const hasPermissionsToRoute = (
+    permissions: GetUserPermissionsResponse[],
+    requiredPermissions?: CheckCurrentPermissionsQuery[]
+  ) => {
+    if (!requiredPermissions) return true;
+
+    for (const requiredPermission of requiredPermissions) {
+      const hasPermission = permissions.some((permission) => {
+        return (
+          (permission.action === Action.Manage ||
+            permission.action === requiredPermission.action) &&
+          (/all/i.test(permission.subject) ||
+            permission.subject === requiredPermission.subject)
+        );
+      });
+
+      if (!hasPermission) {
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+  return (
+    <>
+      {navigation
+        .filter((item) =>
+          hasPermissionsToRoute(permissions, item.requiredPermissions)
+        )
+        .map((item) => (
+          <li key={item.name}>
+            <Link
+              href={item.href}
+              className={classNames(
+                pathname.includes(item.href)
+                  ? 'bg-gray-800 text-white'
+                  : 'text-gray-400 hover:bg-gray-800 hover:text-white',
+                'group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6'
+              )}
+            >
+              <item.icon className='h-6 w-6 shrink-0' aria-hidden='true' />
+              {item.name}
+            </Link>
+          </li>
+        ))}
+    </>
+  );
+}
+
+export default function Sidebar({ permissions = [], session }: Props) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   return (
     <div>
@@ -107,25 +190,7 @@ export default function Sidebar({ session }: Props) {
                     <ul role='list' className='flex flex-1 flex-col gap-y-7'>
                       <li>
                         <ul role='list' className='-mx-2 space-y-1'>
-                          {navigation.map((item) => (
-                            <li key={item.name}>
-                              <Link
-                                href={item.href}
-                                className={classNames(
-                                  pathname.includes(item.href)
-                                    ? 'bg-gray-800 text-white'
-                                    : 'text-gray-400 hover:bg-gray-800 hover:text-white',
-                                  'group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6'
-                                )}
-                              >
-                                <item.icon
-                                  className='h-6 w-6 shrink-0'
-                                  aria-hidden='true'
-                                />
-                                {item.name}
-                              </Link>
-                            </li>
-                          ))}
+                          <NavigationLinks permissions={permissions} />
                         </ul>
                       </li>
                       <li className='mt-auto'>
@@ -164,25 +229,7 @@ export default function Sidebar({ session }: Props) {
             <ul role='list' className='flex flex-1 flex-col gap-y-7'>
               <li>
                 <ul role='list' className='-mx-2 space-y-1'>
-                  {navigation.map((item) => (
-                    <li key={item.name}>
-                      <Link
-                        href={item.href}
-                        className={classNames(
-                          pathname.includes(item.href)
-                            ? 'bg-gray-800 text-white'
-                            : 'text-gray-400 hover:bg-gray-800 hover:text-white',
-                          'group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6'
-                        )}
-                      >
-                        <item.icon
-                          className='h-6 w-6 shrink-0'
-                          aria-hidden='true'
-                        />
-                        {item.name}
-                      </Link>
-                    </li>
-                  ))}
+                  <NavigationLinks permissions={permissions} />
                 </ul>
               </li>
               <li className='mt-auto'>
