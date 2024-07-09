@@ -62,13 +62,15 @@ const navigation: {
 ];
 
 type Props = {
+  closeSidebar: () => void;
   permissions?: GetUserPermissionsResponse[];
   session: Session | null;
 };
 
 export function NavigationLinks({
+  closeSidebar,
   permissions = [],
-}: Pick<Props, 'permissions'>) {
+}: Omit<Props, 'session'>) {
   const pathname = usePathname();
 
   const hasPermissionsToRoute = (
@@ -111,6 +113,7 @@ export function NavigationLinks({
                   : 'text-gray-400 hover:bg-gray-800 hover:text-white',
                 'group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6'
               )}
+              onClick={closeSidebar}
             >
               <item.icon className='h-6 w-6 shrink-0' aria-hidden='true' />
               {item.name}
@@ -190,7 +193,10 @@ export default function Sidebar({ permissions = [], session }: Props) {
                     <ul role='list' className='flex flex-1 flex-col gap-y-7'>
                       <li>
                         <ul role='list' className='-mx-2 space-y-1'>
-                          <NavigationLinks permissions={permissions} />
+                          <NavigationLinks
+                            closeSidebar={() => setSidebarOpen(false)}
+                            permissions={permissions}
+                          />
                         </ul>
                       </li>
                       <li className='mt-auto'>
@@ -229,7 +235,10 @@ export default function Sidebar({ permissions = [], session }: Props) {
             <ul role='list' className='flex flex-1 flex-col gap-y-7'>
               <li>
                 <ul role='list' className='-mx-2 space-y-1'>
-                  <NavigationLinks permissions={permissions} />
+                  <NavigationLinks
+                    closeSidebar={() => setSidebarOpen(false)}
+                    permissions={permissions}
+                  />
                 </ul>
               </li>
               <li className='mt-auto'>
