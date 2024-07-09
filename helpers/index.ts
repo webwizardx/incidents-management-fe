@@ -1,5 +1,19 @@
 import { auth } from '@/auth';
 
+export function buildQuery(query: any): URLSearchParams {
+  const params = new URLSearchParams();
+
+  Object.entries(query).forEach(([key, value]) => {
+    if (Array.isArray(value)) {
+      value.forEach((value) => params.append(key, value.toString()));
+    } else {
+      params.append(key, (value as any).toString());
+    }
+  });
+
+  return params;
+}
+
 export function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ');
 }

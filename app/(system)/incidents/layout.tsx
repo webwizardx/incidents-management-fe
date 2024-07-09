@@ -2,14 +2,14 @@ import { Action } from '@/app/enum/action.enum';
 import { checkCurrentPermissions } from '@/app/login/actions';
 import { notAuthorized } from '../not-authorized';
 
-export default async function UsersLayout({
+export default async function IncidentsLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const response = await checkCurrentPermissions({
-    action: Action.Manage,
-    subject: 'users',
+    action: Action.Read,
+    subject: 'incidents',
   });
 
   if (!response?.hasPermission) {

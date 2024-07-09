@@ -42,6 +42,12 @@ const navigation: {
     href: '/incidents',
     icon: TicketIcon,
     name: 'Incidencias',
+    requiredPermissions: [
+      {
+        action: Action.Read,
+        subject: 'Incidents',
+      },
+    ],
   },
   {
     href: '#',
@@ -124,7 +130,10 @@ export function NavigationLinks({
   );
 }
 
-export default function Sidebar({ permissions = [], session }: Props) {
+export default function Sidebar({
+  permissions = [],
+  session,
+}: Omit<Props, 'closeSidebar'>) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   return (
     <div>
