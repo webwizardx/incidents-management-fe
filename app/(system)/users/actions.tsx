@@ -1,5 +1,6 @@
 'use server';
 
+import { i18n } from '@/app/i18n';
 import { PaginatedResponse } from '@/app/types';
 import { buildQuery, cleanObject } from '@/helpers';
 import { revalidatePath } from 'next/cache';
@@ -125,6 +126,12 @@ export async function getUsers(
     if (!response.ok) {
       Promise.reject(data);
     }
+    data.data = data.data.map((user: User) => ({
+      ...user,
+      ...(user.role
+        ? { role: { ...user.role, name: i18n.roles[user.role.name] } }
+        : {}),
+    }));
     return data;
   } catch (error) {
     console.error(`[${getUsers.name}] ERROR - ${JSON.stringify(error)}`);

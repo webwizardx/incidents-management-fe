@@ -1,5 +1,6 @@
 'use server';
 
+import { i18n } from '@/app/i18n';
 import { PaginatedResponse } from '@/app/types';
 import { buildQuery, cleanObject } from '@/helpers';
 import { revalidatePath } from 'next/cache';
@@ -139,6 +140,18 @@ export async function getIncidents(
     if (!response.ok) {
       Promise.reject(data);
     }
+    data.data = data.data.map((incident: Incident) => ({
+      ...incident,
+      ...(incident.status
+        ? {
+            status: {
+              ...incident.status,
+              name: i18n.status[incident.status.name],
+            },
+          }
+        : {}),
+    }));
+
     return data;
   } catch (error) {
     console.error(`[${getIncidents.name}] ERROR - ${JSON.stringify(error)}`);
@@ -168,6 +181,11 @@ export async function getStatus(
     if (!response.ok) {
       Promise.reject(data);
     }
+
+    data.data = data.data.map((status: Status) => ({
+      ...status,
+      name: i18n.status[status.name],
+    }));
     return data;
   } catch (error) {
     console.error(`[${getStatus.name}] ERROR - ${JSON.stringify(error)}`);
