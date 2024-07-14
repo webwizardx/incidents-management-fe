@@ -1,3 +1,4 @@
+import { SelectOption } from '@/app/types';
 import { auth } from '@/auth';
 
 export function buildQuery(query: any): URLSearchParams {
@@ -57,4 +58,26 @@ export function cleanObject(obj: any): any {
   }
 
   return cleanedObject;
+}
+
+export function getSelectOptions(data: any[], label: string) {
+  const options: SelectOption[] = [
+    {
+      label: 'Todos',
+      value: null,
+    },
+  ];
+
+  if (!data || !data.length) {
+    return options;
+  }
+
+  options.push(
+    ...data?.map((option) => ({
+      label: option[label],
+      value: option,
+    }))
+  );
+
+  return options;
 }

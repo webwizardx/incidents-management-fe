@@ -1,8 +1,10 @@
 import { Order } from '@/app/types';
+import { getSelectOptions } from '@/helpers';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { Pagination } from '../../components';
-import { getIncidents } from './actions';
+import { getCategories, getIncidents, getStatus } from './actions';
+import Select from './components/Select';
 import { QueryIncident } from './types';
 
 export const metadata: Metadata = {
@@ -32,16 +34,21 @@ export default async function Incidents({
   searchParams: {
     limit?: number;
     page?: number;
+    statusId?: number;
   };
 }) {
   const query = { ...DEFAULT_QUERY, ...searchParams };
   query.page = Number(query.page);
   const { data, totalCount } = await getIncidents(query);
+  const { data: categories } = await getCategories();
+  const { data: status } = await getStatus();
   const badgeColors: Record<string, string> = {
     CLOSED: 'bg-red-100 text-red-700',
     IN_PROGRESS: 'bg-yellow-100 text-yellow-800',
     OPEN: 'bg-green-100 text-green-700',
   };
+  const statusOptions = getSelectOptions(status, 'name');
+  const categoriesOptions = getSelectOptions(categories, 'name');
 
   return (
     <div className='p-8'>
@@ -50,9 +57,25 @@ export default async function Incidents({
           <h1 className='text-base font-semibold leading-6 text-gray-900'>
             Incidentes
           </h1>
-          <p className='mt-2 text-sm text-gray-700'>
+          <p className='mb-4 mt-2 text-sm text-gray-700'>
             Una lista de todas las incidencias registradas en el sistema.
           </p>
+          <div className='flex gap-4'>
+            <div className='w-full max-w-xs'>
+              <Select
+                label='Seleccionar Categoría'
+                options={categoriesOptions}
+                query='categoryId'
+              />
+            </div>
+            <div className='w-full max-w-xs'>
+              <Select
+                label='Seleccionar status'
+                options={statusOptions}
+                query='statusId'
+              />
+            </div>
+          </div>
         </div>
         <div className='mt-4 sm:ml-16 sm:mt-0 sm:flex-none'>
           <Link

@@ -12,6 +12,7 @@ import {
   QueryCategory,
   QueryIncident,
   QueryStatus,
+  Status,
 } from './types';
 
 export async function createIncident(
@@ -147,7 +148,7 @@ export async function getIncidents(
 
 export async function getStatus(
   query: QueryStatus = {}
-): Promise<PaginatedResponse<Category>> {
+): Promise<PaginatedResponse<Status>> {
   try {
     const cookie = headers().get('cookie') as string;
     const url = new URL(`${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/status`);

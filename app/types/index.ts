@@ -19,3 +19,5 @@ export type Query<T = any> = {
   orderBy?: keyof T;
   page?: number;
 } & T;
+
+export type SelectOption<T = any> = { label: string; value: T | null };

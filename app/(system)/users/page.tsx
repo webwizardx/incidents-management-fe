@@ -31,9 +31,9 @@ export default async function Users({
   query.page = Number(query.page);
   const { data, totalCount } = await getUsers(query);
   const badgeColors: Record<string, string> = {
-    admin: 'bg-pink-100 text-pink-700',
-    technician: 'bg-purple-100 text-purple-700',
-    user: 'bg-indigo-100 text-indigo-700',
+    ADMIN: 'bg-pink-100 text-pink-700',
+    TECHNICIAN: 'bg-purple-100 text-purple-700',
+    USER: 'bg-indigo-100 text-indigo-700',
   };
 
   return (
