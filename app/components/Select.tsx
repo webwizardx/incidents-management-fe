@@ -11,7 +11,7 @@ import {
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Status } from '../types';
+import { Status } from '../(system)/incidents/types';
 
 type Props<T = any> = {
   label: string;

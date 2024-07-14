@@ -1,8 +1,10 @@
+import Select from '@/app/components/Select';
 import { Order } from '@/app/types';
+import { getSelectOptions } from '@/helpers';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { Pagination } from '../../components';
-import { getUsers } from './actions';
+import { getRoles, getUsers } from './actions';
 import DeleteUserButton from './components/DeleteUserButton';
 import { QueryUser } from './types';
 
@@ -25,16 +27,19 @@ export default async function Users({
   searchParams: {
     limit?: number;
     page?: number;
+    roleId?: number;
   };
 }) {
   const query = { ...DEFAULT_QUERY, ...searchParams };
   query.page = Number(query.page);
   const { data, totalCount } = await getUsers(query);
+  const { data: roles } = await getRoles();
   const badgeColors: Record<string, string> = {
     ADMIN: 'bg-pink-100 text-pink-700',
     TECHNICIAN: 'bg-purple-100 text-purple-700',
     USER: 'bg-indigo-100 text-indigo-700',
   };
+  const rolesOptions = getSelectOptions(roles, 'name');
 
   return (
     <div className='p-8'>
@@ -43,9 +48,18 @@ export default async function Users({
           <h1 className='text-base font-semibold leading-6 text-gray-900'>
             Usuarios
           </h1>
-          <p className='mt-2 text-sm text-gray-700'>
+          <p className='mb-4 mt-2 text-sm text-gray-700'>
             Una lista de todos los usuarios registrados en el sistema.
           </p>
+          <div className='flex gap-4'>
+            <div className='w-full max-w-xs'>
+              <Select
+                label='Seleccionar rol'
+                options={rolesOptions}
+                query='roleId'
+              />
+            </div>
+          </div>
         </div>
         <div className='mt-4 sm:ml-16 sm:mt-0 sm:flex-none'>
           <Link

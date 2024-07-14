@@ -3,8 +3,8 @@ import { getSelectOptions } from '@/helpers';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { Pagination } from '../../components';
+import Select from '../../components/Select';
 import { getCategories, getIncidents, getStatus } from './actions';
-import Select from './components/Select';
 import { QueryIncident } from './types';
 
 export const metadata: Metadata = {

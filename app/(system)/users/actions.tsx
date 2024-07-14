@@ -1,7 +1,7 @@
 'use server';
 
 import { PaginatedResponse } from '@/app/types';
-import { cleanObject } from '@/helpers';
+import { buildQuery, cleanObject } from '@/helpers';
 import { revalidatePath } from 'next/cache';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -108,7 +108,8 @@ export async function getUsers(
   try {
     const cookie = headers().get('cookie') as string;
     const url = new URL(`${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/users`);
-    url.search = new URLSearchParams(query as any).toString();
+    const params = buildQuery(query);
+    url.search = params.toString();
 
     const response = await fetch(url.toString(), {
       cache: 'no-store',
