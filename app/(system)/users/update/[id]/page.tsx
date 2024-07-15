@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: 'Actualización de Usuario',
 };
 
-export default async function Create({
+export default async function CreateUser({
   params: { id },
 }: {
   params: { id: number };

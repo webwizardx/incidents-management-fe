@@ -68,6 +68,10 @@ export async function getRoles(
     if (!response.ok) {
       Promise.reject(data);
     }
+    data.data = data.data.map((role: Role) => ({
+      ...role,
+      name: i18n.roles[role.name],
+    }));
     return data;
   } catch (error) {
     console.error(`[${getRoles.name}] ERROR - ${JSON.stringify(error)}`);

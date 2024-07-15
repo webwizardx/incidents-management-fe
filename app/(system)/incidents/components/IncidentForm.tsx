@@ -7,17 +7,18 @@ import { useFormik } from 'formik';
 import { z } from 'zod';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { User } from '../../users/types';
+import { createIncident, patchIncident } from '../actions';
 import { Category, Status } from '../types';
 
 type Props = {
   categories: Category[];
   incidentId?: number;
   initialValues?: {
-    assignTo?: number;
-    categoryId: number;
+    assignedTo?: string;
+    categoryId: string;
     closedAt?: string;
-    ownerId: number;
-    statusId: number;
+    ownerId: string;
+    statusId: string;
     title: string;
   };
   ownerId?: string;
@@ -25,38 +26,49 @@ type Props = {
   users: User[];
 };
 
-const incidentSchema = z.object({
-  assignTo: z
-    .string({
-      required_error: 'La persona asignada a la incidencia es requerida',
-    })
-    .optional(),
-  categoryId: z.string({
-    required_error: 'La categoría es requerida',
-  }),
-  closedAt: z
-    .string({
-      required_error: 'La fecha de cierre de incidencia es requerida',
-    })
-    //.datetime('La fecha de cierre de incidencia no es válida')
-    .optional(),
-  ownerId: z.string({
-    required_error: 'El dueño de la incidencia es requerida',
-  }),
-  statusId: z.string({
-    required_error: 'El status de la incidencia es requerida',
-  }),
-  title: z.string({
-    required_error: 'El título de la incidencia es requerido',
-  }),
-});
+const incidentSchema = z
+  .object({
+    assignedTo: z
+      .string({
+        required_error: 'La persona asignada a la incidencia es requerida',
+      })
+      .optional(),
+    categoryId: z.string({
+      required_error: 'La categoría es requerida',
+    }),
+    closedAt: z
+      .string()
+      .datetime('La fecha de cierre de incidencia no es válida')
+      .optional(),
+    ownerId: z.string({
+      required_error: 'El dueño de la incidencia es requerida',
+    }),
+    statusId: z.string({
+      required_error: 'El status de la incidencia es requerida',
+    }),
+    title: z.string({
+      required_error: 'El título de la incidencia es requerido',
+    }),
+  })
+  .refine(
+    (schema) => {
+      if (schema.statusId === '3') {
+        return Boolean(schema.closedAt);
+      }
+      return true;
+    },
+    {
+      message: 'La fecha de cierre de incidencia es requerida',
+      path: ['closedAt'],
+    }
+  );
 
 const getValidationSchema = (initialValues: Props['initialValues']) => {
   if (!initialValues) {
     return toFormikValidationSchema(incidentSchema);
   }
 
-  const optionalSchema = incidentSchema.partial();
+  const optionalSchema = incidentSchema.optional();
 
   return toFormikValidationSchema(optionalSchema);
 };
@@ -72,7 +84,7 @@ export default function IncidentForm({
   const validationSchema = getValidationSchema(initialValues);
   const formik = useFormik({
     initialValues: initialValues || {
-      assignTo: users[0]?.id.toString() || '',
+      assignedTo: '',
       categoryId: categories[0]?.id.toString() || '',
       closedAt: '',
       ownerId,
@@ -82,15 +94,25 @@ export default function IncidentForm({
     validationSchema,
     onSubmit: async (values: any) => {
       let result = null;
-      console.log('values: ', values);
-      /*
+      if (values.statusId !== '3') {
+        delete values.closedAt;
+      }
+
       if (initialValues) {
-        result = await patchUser(userId!, values);
+        result = await patchIncident(incidentId!, values);
       } else {
-        result = await createUser(values);
-      } */
+        result = await createIncident(values);
+      }
     },
   });
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let date = null;
+    if (e.target.value) {
+      date = `${e.target.value}:00Z`;
+    }
+    formik.setFieldValue('closedAt', date || e.target.value);
+  };
 
   return (
     <form
@@ -161,40 +183,47 @@ export default function IncidentForm({
             </Label>
             <Select
               className="block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              {...formik.getFieldProps('assignTo')}
+              {...formik.getFieldProps('assignedTo')}
             >
+              <option value="">Sin asignar</option>
               {users.map((user) => (
                 <option key={user?.id} value={user?.id}>
                   {capitalizeString(`${user?.firstName} ${user?.lastName}`)}
                 </option>
               ))}
             </Select>
-            {formik.touched.assignTo && formik.errors.assignTo ? (
+            {formik.touched.assignedTo && formik.errors.assignedTo ? (
               <small className="text-sm text-red-500">
-                {formik.errors.assignTo as string}
+                {formik.errors.assignedTo as string}
               </small>
             ) : null}
           </Field>
         </div>
-        <div className="grid grid-cols-2 gap-4">
-          <Field>
-            <div className="flex items-center gap-2">
-              <Label className="text-sm font-medium leading-6 text-gray-900">
-                Fecha de cierre
-              </Label>
-            </div>
-            <Input
-              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              type="date"
-              {...formik.getFieldProps('closedAt')}
-            />
-            {formik.touched.closedAt && formik.errors.closedAt ? (
-              <small className="text-sm text-red-500">
-                {formik.errors.closedAt as string}
-              </small>
-            ) : null}
-          </Field>
-        </div>
+
+        {formik.values.statusId === '3' ? (
+          <div className="grid grid-cols-2 gap-4">
+            <Field>
+              <div className="flex items-center gap-2">
+                <Label className="text-sm font-medium leading-6 text-gray-900">
+                  Fecha de cierre
+                </Label>
+              </div>
+              <Input
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                {...formik.getFieldProps('closedAt')}
+                min={new Date().toISOString().slice(0, 16)}
+                onChange={handleDateChange}
+                value={formik.values.closedAt?.slice(0, 16)}
+                type="datetime-local"
+              />
+              {formik.touched.closedAt && formik.errors.closedAt ? (
+                <small className="text-sm text-red-500">
+                  {formik.errors.closedAt as string}
+                </small>
+              ) : null}
+            </Field>
+          </div>
+        ) : null}
       </Fieldset>
       <div className="mt-4 flex justify-end gap-4">
         <button

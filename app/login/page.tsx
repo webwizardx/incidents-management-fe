@@ -2,10 +2,13 @@
 
 import { ExclamationCircleIcon } from '@heroicons/react/20/solid';
 import Image from 'next/image';
+import { useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
+import { ShowPasswordIcon } from '../components';
 import { authenticate } from './actions';
 
 export default function Login() {
+  const [showPassword, setShowPassword] = useState(false);
   const [state, dispatch] = useFormState(authenticate, undefined);
   const { pending } = useFormStatus();
 
@@ -42,17 +45,23 @@ export default function Login() {
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="password"
-                    className="block text-sm font-medium leading-6 text-gray-900"
-                  >
-                    Contraseña
-                  </label>
+                  <div className="flex items-center gap-2">
+                    <label
+                      htmlFor="password"
+                      className="block text-sm font-medium leading-6 text-gray-900"
+                    >
+                      Contraseña
+                    </label>
+                    <ShowPasswordIcon
+                      showPassword={showPassword}
+                      setShowPassword={setShowPassword}
+                    />
+                  </div>
                   <div className="mt-2">
                     <input
                       id="password"
                       name="password"
-                      type="password"
+                      type={showPassword ? 'text' : 'password'}
                       autoComplete="current-password"
                       required
                       className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"

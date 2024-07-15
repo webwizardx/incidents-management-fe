@@ -3,15 +3,19 @@ import { Action } from '@/app/enum/action.enum';
 import { checkCurrentPermissions } from '@/app/login/actions';
 import { auth } from '@/auth';
 import { Metadata } from 'next';
-import { getUsers } from '../../users/actions';
-import { getCategories, getStatus } from '../actions';
-import IncidentForm from '../components/IncidentForm';
+import { getUsers } from '../../../users/actions';
+import { getCategories, getIncident, getStatus } from '../../actions';
+import IncidentForm from '../../components/IncidentForm';
 
 export const metadata: Metadata = {
-  title: 'Creación de Incidente',
+  title: 'Actualización de Incidente',
 };
 
-export default async function CreateIncident() {
+export default async function UpdateIncident({
+  params: { id },
+}: {
+  params: { id: number };
+}) {
   const session: any = await auth();
   const ownerId = session?.user?.id?.toString();
   const response = await checkCurrentPermissions({
@@ -26,6 +30,15 @@ export default async function CreateIncident() {
   const { data: categories } = await getCategories();
   const { data: status } = await getStatus();
   const { data: users } = await getUsers();
+  const incident = await getIncident(id);
+  const initialValues = {
+    ...incident,
+    assignedTo: incident.assignedTo?.toString() || '',
+    categoryId: incident.categoryId.toString(),
+    closedAt: incident.closedAt || '',
+    ownerId: incident.ownerId.toString(),
+    statusId: incident.statusId.toString(),
+  };
 
   return (
     <div className="grid grid-cols-1 gap-x-8 gap-y-8 p-8 md:grid-cols-3">
@@ -40,6 +53,8 @@ export default async function CreateIncident() {
 
       <IncidentForm
         categories={categories}
+        incidentId={id}
+        initialValues={initialValues}
         ownerId={ownerId}
         status={status}
         users={users}

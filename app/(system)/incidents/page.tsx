@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Pagination } from '../../components';
 import Select from '../../components/Select';
 import { getCategories, getIncidents, getStatus } from './actions';
+import DeleteIncidentButton from './components/DeleteIncidentButton';
 import { QueryIncident } from './types';
 
 export const metadata: Metadata = {
@@ -143,6 +144,7 @@ export default async function Incidents({
                           Editar{' '}
                           <span className="sr-only">, {incident.id}</span>
                         </Link>
+                        <DeleteIncidentButton incident={incident} />
                       </span>
                     </td>
                   </tr>
