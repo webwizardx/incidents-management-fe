@@ -13,12 +13,12 @@ export default function ShowPasswordIcon({
     <>
       {showPassword ? (
         <EyeSlashIcon
-          className='h-4 w-4 cursor-pointer'
+          className="h-4 w-4 cursor-pointer"
           onClick={() => setShowPassword(false)}
         />
       ) : (
         <EyeIcon
-          className='h-4 w-4 cursor-pointer'
+          className="h-4 w-4 cursor-pointer"
           onClick={() => setShowPassword(true)}
         />
       )}

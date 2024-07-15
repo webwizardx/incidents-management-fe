@@ -11,8 +11,8 @@ export default async function SystemLayout({
   return (
     <div>
       <Sidebar permissions={permissions} session={session} />
-      <div className='lg:pl-72'>
-        <main className=''>{children}</main>
+      <div className="lg:pl-72">
+        <main className="">{children}</main>
       </div>
     </div>
   );
