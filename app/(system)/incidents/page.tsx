@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Pagination } from '../../components';
 import Select from '../../components/Select';
 import { getCategories, getIncidents, getStatus } from './actions';
+import AutoAssignIncidentButton from './components/AutoAssignIncidentButton';
 import DeleteIncidentButton from './components/DeleteIncidentButton';
 import { QueryIncident } from './types';
 
@@ -144,6 +145,7 @@ export default async function Incidents({
                           Editar{' '}
                           <span className="sr-only">, {incident.id}</span>
                         </Link>
+                        <AutoAssignIncidentButton incident={incident} />
                         <DeleteIncidentButton incident={incident} />
                       </span>
                     </td>

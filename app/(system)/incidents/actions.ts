@@ -193,6 +193,42 @@ export async function getStatus(
   }
 }
 
+export async function autoAssignIncidentToUser(id: number): Promise<Incident> {
+  try {
+    const cookie = headers().get('cookie') as string;
+    const url = new URL(
+      `${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/incidents/${id}/auto-assign`
+    );
+
+    const response = await fetch(url.toString(), {
+      body: JSON.stringify({}),
+      cache: 'no-store',
+      headers: {
+        cookie,
+      },
+      method: 'PATCH',
+    });
+
+    console.log(`[${autoAssignIncidentToUser.name}] - ${url.toString()}`);
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      Promise.reject(data);
+    }
+
+    revalidatePath('/incidents');
+    return data;
+  } catch (error) {
+    console.error(
+      `[${autoAssignIncidentToUser.name}] ERROR - ${JSON.stringify(error)}`
+    );
+    return null as any;
+  } finally {
+    redirect('/incidents');
+  }
+}
+
 export async function updateIncident(
   id: number,
   payload: Partial<IncidentPayload>
