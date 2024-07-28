@@ -8,13 +8,50 @@ import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import {
   Category,
+  Comment,
+  CommentPayload,
   Incident,
   IncidentPayload,
   QueryCategory,
+  QueryComment,
   QueryIncident,
   QueryStatus,
   Status,
 } from './types';
+
+export async function createComment(payload: CommentPayload): Promise<Comment> {
+  try {
+    const cookie = headers().get('cookie') as string;
+    const cleanedPayload = cleanObject(payload);
+    const url = new URL(`${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/comments`);
+    const response = await fetch(url.toString(), {
+      body: JSON.stringify(cleanedPayload),
+      cache: 'no-store',
+      headers: {
+        cookie,
+      },
+      method: 'POST',
+    });
+
+    console.log(`[${createComment.name}] - ${url.toString()}`);
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      Promise.reject(data);
+    }
+    revalidatePath('/incidents/update/[id]');
+    return data;
+  } catch (error) {
+    console.error(
+      `[${createComment.name}] ERROR - ${JSON.stringify(
+        error,
+        Object.getOwnPropertyNames(error)
+      )}`
+    );
+    return null as any;
+  }
+}
 
 export async function createIncident(
   payload: IncidentPayload
@@ -83,6 +120,37 @@ export async function getCategories(
     return data;
   } catch (error) {
     console.error(`[${getCategories.name}] ERROR - ${JSON.stringify(error)}`);
+    return null as any;
+  }
+}
+
+export async function getComments(
+  query: QueryComment = {}
+): Promise<PaginatedResponse<Comment>> {
+  try {
+    const cookie = headers().get('cookie') as string;
+    const url = new URL(`${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/comments`);
+    const params = buildQuery(query);
+    url.search = params.toString();
+
+    const response = await fetch(url.toString(), {
+      cache: 'no-store',
+      headers: {
+        cookie,
+      },
+    });
+
+    console.log(`[${getComments.name}] - ${url.toString()}`);
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      Promise.reject(data);
+    }
+
+    return data;
+  } catch (error) {
+    console.error(`[${getComments.name}] ERROR - ${JSON.stringify(error)}`);
     return null as any;
   }
 }

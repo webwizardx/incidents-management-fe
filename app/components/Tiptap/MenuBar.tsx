@@ -44,6 +44,7 @@ export default function MenuBar({ editor }: Props) {
             ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline-indigo-600'
             : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50'
         }`}
+        type="button"
       >
         H1
       </button>
@@ -54,6 +55,7 @@ export default function MenuBar({ editor }: Props) {
             ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline-indigo-600'
             : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50'
         }`}
+        type="button"
       >
         H2
       </button>
@@ -64,6 +66,7 @@ export default function MenuBar({ editor }: Props) {
             ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline-indigo-600'
             : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50'
         }`}
+        type="button"
       >
         H3
       </button>
@@ -74,6 +77,7 @@ export default function MenuBar({ editor }: Props) {
             ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline-indigo-600'
             : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50'
         }`}
+        type="button"
       >
         H4
       </button>
@@ -84,6 +88,7 @@ export default function MenuBar({ editor }: Props) {
             ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline-indigo-600'
             : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50'
         }`}
+        type="button"
       >
         H5
       </button>
@@ -94,6 +99,7 @@ export default function MenuBar({ editor }: Props) {
             ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline-indigo-600'
             : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50'
         }`}
+        type="button"
       >
         H6
       </button>
@@ -104,6 +110,7 @@ export default function MenuBar({ editor }: Props) {
             ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline-indigo-600'
             : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50'
         }`}
+        type="button"
       >
         Paragraph
       </button>
@@ -114,6 +121,7 @@ export default function MenuBar({ editor }: Props) {
             ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline-indigo-600'
             : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50'
         }`}
+        type="button"
       >
         Bold
       </button>
@@ -124,6 +132,7 @@ export default function MenuBar({ editor }: Props) {
             ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline-indigo-600'
             : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50'
         }`}
+        type="button"
       >
         Italic
       </button>
@@ -134,6 +143,7 @@ export default function MenuBar({ editor }: Props) {
             ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline-indigo-600'
             : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50'
         }`}
+        type="button"
       >
         Strike
       </button>
@@ -144,6 +154,7 @@ export default function MenuBar({ editor }: Props) {
             ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline-indigo-600'
             : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50'
         }`}
+        type="button"
       >
         Highlight
       </button>
@@ -154,6 +165,7 @@ export default function MenuBar({ editor }: Props) {
             ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline-indigo-600'
             : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50'
         }`}
+        type="button"
       >
         Left
       </button>
@@ -164,6 +176,7 @@ export default function MenuBar({ editor }: Props) {
             ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline-indigo-600'
             : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50'
         }`}
+        type="button"
       >
         Center
       </button>
@@ -174,6 +187,7 @@ export default function MenuBar({ editor }: Props) {
             ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline-indigo-600'
             : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50'
         }`}
+        type="button"
       >
         Right
       </button>
@@ -184,6 +198,7 @@ export default function MenuBar({ editor }: Props) {
             ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline-indigo-600'
             : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50'
         }`}
+        type="button"
       >
         Justify
       </button>
@@ -194,6 +209,7 @@ export default function MenuBar({ editor }: Props) {
             ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline-indigo-600'
             : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50'
         }`}
+        type="button"
       >
         Toggle blockquote
       </button>
@@ -204,6 +220,7 @@ export default function MenuBar({ editor }: Props) {
             ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline-indigo-600'
             : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50'
         }`}
+        type="button"
       >
         Toggle bullet list
       </button>
@@ -214,6 +231,7 @@ export default function MenuBar({ editor }: Props) {
             ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline-indigo-600'
             : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50'
         }`}
+        type="button"
       >
         Toggle ordered list
       </button>
@@ -224,6 +242,7 @@ export default function MenuBar({ editor }: Props) {
             ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline-indigo-600'
             : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50'
         }`}
+        type="button"
       >
         Set link
       </button>

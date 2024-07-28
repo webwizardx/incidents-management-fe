@@ -4,14 +4,20 @@ import './styles.scss';
 
 import Highlight from '@tiptap/extension-highlight';
 import Link from '@tiptap/extension-link';
+import Placeholder from '@tiptap/extension-placeholder';
 import TextAlign from '@tiptap/extension-text-align';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import { useEffect } from 'react';
 import MenuBar from './MenuBar';
+type Props = {
+  content?: string;
+  onChange?: (content: string) => void;
+};
 
-export default function Tiptap() {
+export default function Tiptap({ content = '', onChange }: Props) {
   const editor = useEditor({
-    content: `test`,
+    content,
     extensions: [
       Highlight,
       Link.configure({
@@ -19,13 +25,29 @@ export default function Tiptap() {
         autolink: true,
         defaultProtocol: 'https',
       }),
+      Placeholder.configure({
+        placeholder: 'Ingrese una respuesta...',
+      }),
       StarterKit,
       TextAlign.configure({
         types: ['heading', 'paragraph'],
       }),
     ],
     immediatelyRender: false,
+    onUpdate: ({ editor }) => {
+      if (editor.isEmpty) {
+        onChange?.('');
+      } else {
+        onChange?.(JSON.stringify(editor.getHTML()));
+      }
+    },
   });
+
+  useEffect(() => {
+    if (content === '') {
+      editor?.commands.clearContent(true);
+    }
+  }, [content, editor]);
 
   return (
     <div className="overflow-hidden rounded-lg bg-white shadow">
