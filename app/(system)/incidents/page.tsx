@@ -1,12 +1,12 @@
 import { Order } from '@/app/types';
+import { auth } from '@/auth';
 import { getSelectOptions } from '@/helpers';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { Pagination } from '../../components';
 import Select from '../../components/Select';
 import { getCategories, getIncidents, getStatus } from './actions';
-import AutoAssignIncidentButton from './components/AutoAssignIncidentButton';
-import DeleteIncidentButton from './components/DeleteIncidentButton';
+import ActionsMenu from './components/ActionsMenu';
 import { QueryIncident } from './types';
 
 export const metadata: Metadata = {
@@ -40,6 +40,17 @@ export default async function Incidents({
   };
 }) {
   const query = { ...DEFAULT_QUERY, ...searchParams };
+  const session: any = await auth();
+  const isAdmin = session?.user?.role?.name === 'ADMIN';
+  const roleId = session?.user?.role?.id;
+  const userId = session?.user?.id;
+
+  if (roleId === 3) {
+    query.ownerId = userId;
+  } else if (roleId === 2) {
+    query.assignedTo = userId;
+  }
+
   query.page = Number(query.page);
   const { data, totalCount } = await getIncidents(query);
   const { data: categories } = await getCategories();
@@ -94,15 +105,20 @@ export default async function Incidents({
             <table className="min-w-full divide-y divide-gray-300">
               <thead>
                 <tr>
-                  {HEADERS.map((header) => (
-                    <th
-                      className="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      key={header}
-                      scope="col"
-                    >
-                      {header}
-                    </th>
-                  ))}
+                  {HEADERS.map((header) => {
+                    const adminHeaders = ['Propietario', 'Asignado'];
+                    if (!isAdmin && adminHeaders.includes(header)) return null;
+
+                    return (
+                      <th
+                        className="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900"
+                        key={header}
+                        scope="col"
+                      >
+                        {header}
+                      </th>
+                    );
+                  })}
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
@@ -128,26 +144,20 @@ export default async function Incidents({
                         {incident.status?.name?.toUpperCase()}
                       </span>
                     </td>
+                    {isAdmin ? (
+                      <>
+                        <td className="whitespace-nowrap p-2 text-sm">
+                          {incident.owner?.firstName} {incident.owner?.lastName}
+                        </td>
+                        <td className="whitespace-nowrap p-2 text-sm">
+                          {incident.assignee
+                            ? `${incident.assignee.firstName} ${incident.assignee.lastName}`
+                            : 'Sin asignar'}
+                        </td>
+                      </>
+                    ) : null}
                     <td className="whitespace-nowrap p-2 text-sm">
-                      {incident.owner?.firstName} {incident.owner?.lastName}
-                    </td>
-                    <td className="whitespace-nowrap p-2 text-sm">
-                      {incident.assignee
-                        ? `${incident.assignee.firstName} ${incident.assignee.lastName}`
-                        : 'Sin asignar'}
-                    </td>
-                    <td className="whitespace-nowrap p-2 text-sm">
-                      <span className="isolate inline-flex rounded-md shadow-sm">
-                        <Link
-                          className="relative inline-flex items-center rounded-l-md bg-yellow-300 px-3 py-2 text-sm font-semibold text-white ring-1 ring-inset ring-yellow-300 transition-colors hover:bg-yellow-400 focus:z-10"
-                          href={`/incidents/update/${incident.id}`}
-                        >
-                          Editar{' '}
-                          <span className="sr-only">, {incident.id}</span>
-                        </Link>
-                        <AutoAssignIncidentButton incident={incident} />
-                        <DeleteIncidentButton incident={incident} />
-                      </span>
+                      <ActionsMenu incident={incident} roleId={roleId} />
                     </td>
                   </tr>
                 ))}

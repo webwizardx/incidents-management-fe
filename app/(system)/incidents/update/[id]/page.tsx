@@ -2,9 +2,11 @@ import { notAuthorized } from '@/app/(system)/not-authorized';
 import DefaultUserSVG from '@/app/components/DefaultUserSVG';
 import { Action } from '@/app/enum/action.enum';
 import { checkCurrentPermissions } from '@/app/login/actions';
+import { auth } from '@/auth';
 import { classNames } from '@/helpers';
 import DOMPurify from 'isomorphic-dompurify';
 import { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 import { getComments, getIncident } from '../../actions';
 import UpdateIncidentForm from '../../components/UpdateIncidentForm';
 
@@ -18,7 +20,7 @@ export default async function UpdateIncident({
   params: { id: number };
 }) {
   const response = await checkCurrentPermissions({
-    action: Action.Create,
+    action: Action.Update,
     subject: 'incidents',
   });
 
@@ -26,7 +28,14 @@ export default async function UpdateIncident({
     notAuthorized();
   }
 
+  const session: any = await auth();
+  const userId = session?.user?.id;
+  console.log('userId', userId);
+
   const incident = await getIncident(id);
+  if (!incident) {
+    return redirect('/incidents');
+  }
   const { data } = await getComments({
     incidentId: id,
     include: ['user'],
@@ -40,10 +49,7 @@ export default async function UpdateIncident({
         </h2>
       </div>
       <div className="mx-auto mb-20 w-full max-w-xl">
-        <UpdateIncidentForm
-          incidentId={incident.id}
-          userId={incident.ownerId}
-        />
+        <UpdateIncidentForm incidentId={incident.id} userId={userId} />
       </div>
       <ul role="list" className="space-y-6">
         {data.map((comment, i) => (

@@ -29,7 +29,7 @@ export async function createUser(
     const data = await response.json();
 
     if (!response.ok) {
-      Promise.reject(data);
+      await Promise.reject(data);
     }
     revalidatePath('/users');
     return data;
@@ -66,7 +66,7 @@ export async function getRoles(
     const data = await response.json();
 
     if (!response.ok) {
-      Promise.reject(data);
+      await Promise.reject(data);
     }
     data.data = data.data.map((role: Role) => ({
       ...role,
@@ -98,7 +98,7 @@ export async function getUser(id: number): Promise<User> {
     const data = await response.json();
 
     if (!response.ok) {
-      Promise.reject(data);
+      await Promise.reject(data);
     }
     return data;
   } catch (error) {
@@ -128,7 +128,7 @@ export async function getUsers(
     const data = await response.json();
 
     if (!response.ok) {
-      Promise.reject(data);
+      await Promise.reject(data);
     }
     data.data = data.data.map((user: User) => ({
       ...user,
@@ -168,7 +168,7 @@ export async function updateUser(
     const data = await response.json();
 
     if (!response.ok) {
-      Promise.reject(data);
+      await Promise.reject(data);
     }
     revalidatePath('/users');
     return data;
@@ -205,7 +205,7 @@ export async function patchUser(
     const data = await response.json();
 
     if (!response.ok) {
-      Promise.reject(data);
+      await Promise.reject(data);
     }
 
     revalidatePath('/users');
@@ -238,7 +238,7 @@ export async function deleteUser(id: number): Promise<User> {
     const data = await response.json();
 
     if (!response.ok) {
-      Promise.reject(data);
+      await Promise.reject(data);
     }
 
     revalidatePath('/users');

@@ -23,6 +23,7 @@ export async function createComment(payload: CommentPayload): Promise<Comment> {
   try {
     const cookie = headers().get('cookie') as string;
     const cleanedPayload = cleanObject(payload);
+    console.log(`[${createComment.name}] - ${JSON.stringify(cleanedPayload)}`);
     const url = new URL(`${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/comments`);
     const response = await fetch(url.toString(), {
       body: JSON.stringify(cleanedPayload),
@@ -38,7 +39,7 @@ export async function createComment(payload: CommentPayload): Promise<Comment> {
     const data = await response.json();
 
     if (!response.ok) {
-      Promise.reject(data);
+      await Promise.reject(data);
     }
     revalidatePath('/incidents/update/[id]');
     return data;
@@ -76,7 +77,7 @@ export async function createIncident(
     const data = await response.json();
 
     if (!response.ok) {
-      Promise.reject(data);
+      await Promise.reject(data);
     }
     revalidatePath('/incidents');
     return data;
@@ -115,7 +116,7 @@ export async function getCategories(
     const data = await response.json();
 
     if (!response.ok) {
-      Promise.reject(data);
+      await Promise.reject(data);
     }
     return data;
   } catch (error) {
@@ -145,7 +146,7 @@ export async function getComments(
     const data = await response.json();
 
     if (!response.ok) {
-      Promise.reject(data);
+      await Promise.reject(data);
     }
 
     return data;
@@ -174,7 +175,7 @@ export async function getIncident(id: number): Promise<Incident> {
     const data = await response.json();
 
     if (!response.ok) {
-      Promise.reject(data);
+      await Promise.reject(data);
     }
     return data;
   } catch (error) {
@@ -206,7 +207,7 @@ export async function getIncidents(
     const data = await response.json();
 
     if (!response.ok) {
-      Promise.reject(data);
+      await Promise.reject(data);
     }
     data.data = data.data.map((incident: Incident) => ({
       ...incident,
@@ -247,7 +248,7 @@ export async function getStatus(
     const data = await response.json();
 
     if (!response.ok) {
-      Promise.reject(data);
+      await Promise.reject(data);
     }
 
     data.data = data.data.map((status: Status) => ({
@@ -282,7 +283,7 @@ export async function autoAssignIncidentToUser(id: number): Promise<Incident> {
     const data = await response.json();
 
     if (!response.ok) {
-      Promise.reject(data);
+      await Promise.reject(data);
     }
 
     revalidatePath('/incidents');
@@ -322,7 +323,7 @@ export async function updateIncident(
     const data = await response.json();
 
     if (!response.ok) {
-      Promise.reject(data);
+      await Promise.reject(data);
     }
     revalidatePath('/incidents');
     return data;
@@ -359,7 +360,7 @@ export async function patchIncident(
     const data = await response.json();
 
     if (!response.ok) {
-      Promise.reject(data);
+      await Promise.reject(data);
     }
 
     revalidatePath('/incidents');
@@ -392,7 +393,7 @@ export async function deleteIncident(id: number): Promise<Incident> {
     const data = await response.json();
 
     if (!response.ok) {
-      Promise.reject(data);
+      await Promise.reject(data);
     }
 
     revalidatePath('/incidents');

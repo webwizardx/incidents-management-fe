@@ -47,7 +47,7 @@ export async function checkCurrentPermissions(
     const data = await response.json();
 
     if (!response.ok) {
-      Promise.reject(data);
+      await Promise.reject(data);
     }
     return data;
   } catch (error) {
@@ -81,7 +81,7 @@ export async function getUserPermissions(
     const data = await response.json();
 
     if (!response.ok) {
-      Promise.reject(data);
+      await Promise.reject(data);
     }
     return data;
   } catch (error) {
