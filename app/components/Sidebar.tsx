@@ -51,7 +51,7 @@ const navigation: {
     ],
   },
   {
-    href: '#',
+    href: '/reports',
     icon: ChartPieIcon,
     name: 'Reportes',
   },

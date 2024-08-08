@@ -54,7 +54,10 @@ export default function Tiptap({ content = '', onChange }: Props) {
       <div className="px-4 py-5 sm:p-6">
         <div className="bg-gray-100 p-4">
           <MenuBar editor={editor} />
-          <EditorContent editor={editor} />
+          <EditorContent
+            editor={editor}
+            onKeyDown={(e) => e.stopPropagation()}
+          />
         </div>
       </div>
     </div>
