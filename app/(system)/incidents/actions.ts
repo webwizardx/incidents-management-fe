@@ -193,6 +193,8 @@ export async function getIncidents(
       `${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/incidents`
     );
     const params = buildQuery(query);
+    console.log('query', query);
+    console.log('params', params.toString());
     url.search = params.toString();
 
     const response = await fetch(url.toString(), {

@@ -2,11 +2,12 @@ import { SelectOption } from '@/app/types';
 import { auth } from '@/auth';
 
 export function buildQuery(query: any): URLSearchParams {
+  query = cleanObject(query);
   const params = new URLSearchParams();
 
   Object.entries(query).forEach(([key, value]) => {
     if (Array.isArray(value)) {
-      value.forEach((value) => params.append(key, value.toString()));
+      value.forEach((value) => params.append(`${key}[]`, value.toString()));
     } else {
       params.append(key, (value as any).toString());
     }
@@ -50,10 +51,13 @@ export function cleanObject(obj: any): any {
   let cleanedObject: any = {};
 
   for (let key in obj) {
-    if (obj[key] && typeof obj[key] === 'object') {
+    if (obj[key] && typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
       cleanedObject[key] = cleanObject(obj[key]); // recursive call for nested objects
     } else if (obj[key] !== null && obj[key] !== undefined && obj[key] !== '') {
       cleanedObject[key] = obj[key];
+    }
+    if (Array.isArray(obj[key]) && !obj[key].length) {
+      delete cleanedObject[key];
     }
   }
 

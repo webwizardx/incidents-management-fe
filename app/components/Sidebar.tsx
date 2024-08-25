@@ -210,8 +210,8 @@ export default function Sidebar({
                         </ul>
                       </li>
                       <li className="mt-auto">
-                        <a
-                          href="#"
+                        <Link
+                          href="/categories"
                           className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
                         >
                           <Cog6ToothIcon
@@ -219,7 +219,7 @@ export default function Sidebar({
                             aria-hidden="true"
                           />
                           Configuración
-                        </a>
+                        </Link>
                       </li>
                     </ul>
                   </nav>

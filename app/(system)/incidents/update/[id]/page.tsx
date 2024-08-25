@@ -30,7 +30,6 @@ export default async function UpdateIncident({
 
   const session: any = await auth();
   const userId = session?.user?.id;
-  console.log('userId', userId);
 
   const incident = await getIncident(id);
   if (!incident) {
