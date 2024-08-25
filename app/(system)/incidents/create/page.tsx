@@ -3,7 +3,8 @@ import { Action } from '@/app/enum/action.enum';
 import { checkCurrentPermissions } from '@/app/login/actions';
 import { auth } from '@/auth';
 import { Metadata } from 'next';
-import { getCategories, getStatus } from '../actions';
+import { getCategories } from '../../(configuration)/categories/actions';
+import { getStatus } from '../actions';
 import CreateIncidentForm from '../components/CreateIncidentForm';
 
 export const metadata: Metadata = {

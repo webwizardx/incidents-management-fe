@@ -1,9 +1,16 @@
 import { IncidentsStatusChart } from './components';
-import { getIncidentsStatusCountForChart } from './components/actions';
+import {
+  getAssignedIncidentsCountForChart,
+  getIncidentsStatusCountForChart,
+} from './components/actions';
+import AssignedIncidentsChart from './components/AssignedIncidentsChart';
 
 export default async function Reports() {
-  const response = await getIncidentsStatusCountForChart();
-  const data = Object.values(response) || null;
+  const incidentsStatusCount =
+    Object.values(await getIncidentsStatusCountForChart()) || null;
+  const assignedIncidentsChart =
+    Object.values(await getAssignedIncidentsCountForChart())?.toReversed() ||
+    null;
 
   return (
     <div className="p-8">
@@ -14,8 +21,9 @@ export default async function Reports() {
           </h1>
         </div>
       </div>
-      <div className="grid grid-cols-1 gap-4">
-        <IncidentsStatusChart data={data} />
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <IncidentsStatusChart data={incidentsStatusCount} />
+        <AssignedIncidentsChart data={assignedIncidentsChart} />
       </div>
     </div>
   );

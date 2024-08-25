@@ -4,41 +4,13 @@ import { useMemo } from 'react';
 import { AxisOptions, Chart } from 'react-charts';
 import { ChartData } from './types';
 
-const DEFAULT_DATA: ChartData[] = [
-  {
-    label: 'Cerrado',
-    data: [
-      {
-        label: 'Cerrado',
-        data: 0,
-      },
-    ],
-  },
-  {
-    label: 'En Progreso',
-    data: [
-      {
-        label: 'En Progreso',
-        data: 0,
-      },
-    ],
-  },
-  {
-    label: 'Abierto',
-    data: [
-      {
-        label: 'Abierto',
-        data: 0,
-      },
-    ],
-  },
-];
+const DEFAULT_DATA: ChartData[] = [];
 
 type Props = {
   data?: ChartData[];
 };
 
-export default function IncidentsStatusChart({ data = DEFAULT_DATA }: Props) {
+export default function AssignedTicketsChart({ data = DEFAULT_DATA }: Props) {
   const primaryAxis = useMemo(
     (): AxisOptions<ChartData['data'][number]> => ({
       getValue: (data) => data.label,
