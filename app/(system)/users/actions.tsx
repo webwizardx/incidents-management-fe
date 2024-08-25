@@ -24,7 +24,7 @@ export async function createUser(
       method: 'POST',
     });
 
-    console.log(`[${createUser.name}] - ${url.toString()}`);
+    console.log(`[createUser] - ${url.toString()}`);
 
     const data = await response.json();
 
@@ -35,7 +35,7 @@ export async function createUser(
     return data;
   } catch (error) {
     console.error(
-      `[${createUser.name}] ERROR - ${JSON.stringify(
+      `[createUser] ERROR - ${JSON.stringify(
         error,
         Object.getOwnPropertyNames(error)
       )}`
@@ -61,7 +61,7 @@ export async function getRoles(
       },
     });
 
-    console.log(`[${getRoles.name}] - ${url.toString()}`);
+    console.log(`[getRoles] - ${url.toString()}`);
 
     const data = await response.json();
 
@@ -74,7 +74,7 @@ export async function getRoles(
     }));
     return data;
   } catch (error) {
-    console.error(`[${getRoles.name}] ERROR - ${JSON.stringify(error)}`);
+    console.error(`[getRoles] ERROR - ${JSON.stringify(error)}`);
     return null as any;
   }
 }
@@ -93,7 +93,7 @@ export async function getUser(id: number): Promise<User> {
       },
     });
 
-    console.log(`[${getUser.name}] - ${url.toString()}`);
+    console.log(`[getUser] - ${url.toString()}`);
 
     const data = await response.json();
 
@@ -102,7 +102,7 @@ export async function getUser(id: number): Promise<User> {
     }
     return data;
   } catch (error) {
-    console.error(`[${getUser.name}] ERROR - ${JSON.stringify(error)}`);
+    console.error(`[getUser] ERROR - ${JSON.stringify(error)}`);
     return null as any;
   }
 }
@@ -123,7 +123,7 @@ export async function getUsers(
       },
     });
 
-    console.log(`[${getUsers.name}] - ${url.toString()}`);
+    console.log(`[getUsers] - ${url.toString()}`);
 
     const data = await response.json();
 
@@ -138,7 +138,7 @@ export async function getUsers(
     }));
     return data;
   } catch (error) {
-    console.error(`[${getUsers.name}] ERROR - ${JSON.stringify(error)}`);
+    console.error(`[getUsers] ERROR - ${JSON.stringify(error)}`);
     return null as any;
   }
 }
@@ -163,7 +163,7 @@ export async function updateUser(
       method: 'PUT',
     });
 
-    console.log(`[${updateUser.name}] - ${url.toString()}`);
+    console.log(`[updateUser] - ${url.toString()}`);
 
     const data = await response.json();
 
@@ -173,7 +173,7 @@ export async function updateUser(
     revalidatePath('/users');
     return data;
   } catch (error) {
-    console.error(`[${updateUser.name}] ERROR - ${JSON.stringify(error)}`);
+    console.error(`[updateUser] ERROR - ${JSON.stringify(error)}`);
     return null as any;
   } finally {
     redirect('/users');
@@ -200,7 +200,7 @@ export async function patchUser(
       method: 'PATCH',
     });
 
-    console.log(`[${patchUser.name}] - ${url.toString()}`);
+    console.log(`[patchUser] - ${url.toString()}`);
 
     const data = await response.json();
 
@@ -211,7 +211,7 @@ export async function patchUser(
     revalidatePath('/users');
     return data;
   } catch (error) {
-    console.error(`[${patchUser.name}] ERROR - ${JSON.stringify(error)}`);
+    console.error(`[patchUser] ERROR - ${JSON.stringify(error)}`);
     return null as any;
   } finally {
     redirect('/users');
@@ -233,7 +233,7 @@ export async function deleteUser(id: number): Promise<User> {
       method: 'DELETE',
     });
 
-    console.log(`[${deleteUser.name}] - ${url.toString()}`);
+    console.log(`[deleteUser] - ${url.toString()}`);
 
     const data = await response.json();
 
@@ -244,7 +244,7 @@ export async function deleteUser(id: number): Promise<User> {
     revalidatePath('/users');
     return data;
   } catch (error) {
-    console.error(`[${deleteUser.name}] ERROR - ${JSON.stringify(error)}`);
+    console.error(`[deleteUser] ERROR - ${JSON.stringify(error)}`);
     return null as any;
   } finally {
     redirect('/users');

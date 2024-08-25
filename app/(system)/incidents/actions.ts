@@ -7,12 +7,10 @@ import { revalidatePath } from 'next/cache';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import {
-  Category,
   Comment,
   CommentPayload,
   Incident,
   IncidentPayload,
-  QueryCategory,
   QueryComment,
   QueryIncident,
   QueryStatus,
@@ -23,7 +21,7 @@ export async function createComment(payload: CommentPayload): Promise<Comment> {
   try {
     const cookie = headers().get('cookie') as string;
     const cleanedPayload = cleanObject(payload);
-    console.log(`[${createComment.name}] - ${JSON.stringify(cleanedPayload)}`);
+    console.log(`[createComment] - ${JSON.stringify(cleanedPayload)}`);
     const url = new URL(`${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/comments`);
     const response = await fetch(url.toString(), {
       body: JSON.stringify(cleanedPayload),
@@ -34,7 +32,7 @@ export async function createComment(payload: CommentPayload): Promise<Comment> {
       method: 'POST',
     });
 
-    console.log(`[${createComment.name}] - ${url.toString()}`);
+    console.log(`[createComment] - ${url.toString()}`);
 
     const data = await response.json();
 
@@ -45,7 +43,7 @@ export async function createComment(payload: CommentPayload): Promise<Comment> {
     return data;
   } catch (error) {
     console.error(
-      `[${createComment.name}] ERROR - ${JSON.stringify(
+      `[createComment] ERROR - ${JSON.stringify(
         error,
         Object.getOwnPropertyNames(error)
       )}`
@@ -72,7 +70,7 @@ export async function createIncident(
       method: 'POST',
     });
 
-    console.log(`[${createIncident.name}] - ${url.toString()}`);
+    console.log(`[createIncident] - ${url.toString()}`);
 
     const data = await response.json();
 
@@ -83,7 +81,7 @@ export async function createIncident(
     return data;
   } catch (error) {
     console.error(
-      `[${createIncident.name}] ERROR - ${JSON.stringify(
+      `[createIncident] ERROR - ${JSON.stringify(
         error,
         Object.getOwnPropertyNames(error)
       )}`
@@ -91,37 +89,6 @@ export async function createIncident(
     return null as any;
   } finally {
     redirect('/incidents');
-  }
-}
-
-export async function getCategories(
-  query: QueryCategory = {}
-): Promise<PaginatedResponse<Category>> {
-  try {
-    const cookie = headers().get('cookie') as string;
-    const url = new URL(
-      `${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/categories`
-    );
-    url.search = new URLSearchParams(query as any).toString();
-
-    const response = await fetch(url.toString(), {
-      cache: 'no-store',
-      headers: {
-        cookie,
-      },
-    });
-
-    console.log(`[${getCategories.name}] - ${url.toString()}`);
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      await Promise.reject(data);
-    }
-    return data;
-  } catch (error) {
-    console.error(`[${getCategories.name}] ERROR - ${JSON.stringify(error)}`);
-    return null as any;
   }
 }
 
@@ -141,7 +108,7 @@ export async function getComments(
       },
     });
 
-    console.log(`[${getComments.name}] - ${url.toString()}`);
+    console.log(`[getComments] - ${url.toString()}`);
 
     const data = await response.json();
 
@@ -151,7 +118,7 @@ export async function getComments(
 
     return data;
   } catch (error) {
-    console.error(`[${getComments.name}] ERROR - ${JSON.stringify(error)}`);
+    console.error(`[getComments] ERROR - ${JSON.stringify(error)}`);
     return null as any;
   }
 }
@@ -170,7 +137,7 @@ export async function getIncident(id: number): Promise<Incident> {
       },
     });
 
-    console.log(`[${getIncident.name}] - ${url.toString()}`);
+    console.log(`[getIncident] - ${url.toString()}`);
 
     const data = await response.json();
 
@@ -179,7 +146,7 @@ export async function getIncident(id: number): Promise<Incident> {
     }
     return data;
   } catch (error) {
-    console.error(`[${getIncident.name}] ERROR - ${JSON.stringify(error)}`);
+    console.error(`[getIncident] ERROR - ${JSON.stringify(error)}`);
     return null as any;
   }
 }
@@ -204,7 +171,7 @@ export async function getIncidents(
       },
     });
 
-    console.log(`[${getIncidents.name}] - ${url.toString()}`);
+    console.log(`[getIncidents] - ${url.toString()}`);
 
     const data = await response.json();
 
@@ -225,7 +192,7 @@ export async function getIncidents(
 
     return data;
   } catch (error) {
-    console.error(`[${getIncidents.name}] ERROR - ${JSON.stringify(error)}`);
+    console.error(`[getIncidents] ERROR - ${JSON.stringify(error)}`);
     return null as any;
   }
 }
@@ -245,7 +212,7 @@ export async function getStatus(
       },
     });
 
-    console.log(`[${getStatus.name}] - ${url.toString()}`);
+    console.log(`[getStatus] - ${url.toString()}`);
 
     const data = await response.json();
 
@@ -259,7 +226,7 @@ export async function getStatus(
     }));
     return data;
   } catch (error) {
-    console.error(`[${getStatus.name}] ERROR - ${JSON.stringify(error)}`);
+    console.error(`[getStatus] ERROR - ${JSON.stringify(error)}`);
     return null as any;
   }
 }
@@ -280,7 +247,7 @@ export async function autoAssignIncidentToUser(id: number): Promise<Incident> {
       method: 'PATCH',
     });
 
-    console.log(`[${autoAssignIncidentToUser.name}] - ${url.toString()}`);
+    console.log(`[autoAssignIncidentToUser] - ${url.toString()}`);
 
     const data = await response.json();
 
@@ -292,7 +259,7 @@ export async function autoAssignIncidentToUser(id: number): Promise<Incident> {
     return data;
   } catch (error) {
     console.error(
-      `[${autoAssignIncidentToUser.name}] ERROR - ${JSON.stringify(error)}`
+      `[autoAssignIncidentToUser] ERROR - ${JSON.stringify(error)}`
     );
     return null as any;
   } finally {
@@ -320,7 +287,7 @@ export async function updateIncident(
       method: 'PUT',
     });
 
-    console.log(`[${updateIncident.name}] - ${url.toString()}`);
+    console.log(`[updateIncident] - ${url.toString()}`);
 
     const data = await response.json();
 
@@ -330,7 +297,7 @@ export async function updateIncident(
     revalidatePath('/incidents');
     return data;
   } catch (error) {
-    console.error(`[${updateIncident.name}] ERROR - ${JSON.stringify(error)}`);
+    console.error(`[updateIncident] ERROR - ${JSON.stringify(error)}`);
     return null as any;
   } finally {
     redirect('/incidents');
@@ -357,7 +324,7 @@ export async function patchIncident(
       method: 'PATCH',
     });
 
-    console.log(`[${patchIncident.name}] - ${url.toString()}`);
+    console.log(`[patchIncident] - ${url.toString()}`);
 
     const data = await response.json();
 
@@ -368,7 +335,7 @@ export async function patchIncident(
     revalidatePath('/incidents');
     return data;
   } catch (error) {
-    console.error(`[${patchIncident.name}] ERROR - ${JSON.stringify(error)}`);
+    console.error(`[patchIncident] ERROR - ${JSON.stringify(error)}`);
     return null as any;
   } finally {
     redirect('/incidents');
@@ -390,7 +357,7 @@ export async function deleteIncident(id: number): Promise<Incident> {
       method: 'DELETE',
     });
 
-    console.log(`[${deleteIncident.name}] - ${url.toString()}`);
+    console.log(`[patchIncident] - ${url.toString()}`);
 
     const data = await response.json();
 
@@ -401,7 +368,7 @@ export async function deleteIncident(id: number): Promise<Incident> {
     revalidatePath('/incidents');
     return data;
   } catch (error) {
-    console.error(`[${deleteIncident.name}] ERROR - ${JSON.stringify(error)}`);
+    console.error(`[patchIncident] ERROR - ${JSON.stringify(error)}`);
     return null as any;
   } finally {
     redirect('/incidents');

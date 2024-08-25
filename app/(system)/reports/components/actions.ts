@@ -17,9 +17,7 @@ export async function getIncidentsStatusCountForChart(): Promise<IncidentCountFo
       },
     });
 
-    console.log(
-      `[${getIncidentsStatusCountForChart.name}] - ${url.toString()}`
-    );
+    console.log(`[getIncidentsStatusCountForChart] - ${url.toString()}`);
 
     const data = await response.json();
 
@@ -30,7 +28,7 @@ export async function getIncidentsStatusCountForChart(): Promise<IncidentCountFo
     return data;
   } catch (error) {
     console.error(
-      `[${getIncidentsStatusCountForChart.name}] ERROR - ${JSON.stringify(
+      `[getIncidentsStatusCountForChart] ERROR - ${JSON.stringify(
         error,
         Object.getOwnPropertyNames(error)
       )}`

@@ -3,9 +3,10 @@ import { auth } from '@/auth';
 import { getSelectOptions } from '@/helpers';
 import { Metadata } from 'next';
 import Link from 'next/link';
+import { getCategories } from '../(configuration)/categories/actions';
 import { Pagination } from '../../components';
 import Select from '../../components/Select';
-import { getCategories, getIncidents, getStatus } from './actions';
+import { getIncidents, getStatus } from './actions';
 import ActionsMenu from './components/ActionsMenu';
 import { QueryIncident } from './types';
 
