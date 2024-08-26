@@ -34,7 +34,7 @@ export default async function Create() {
 
   const { data: categories } = await getCategories();
   const { data: status } = await getStatus();
-  const { data: users } = await getUsers();
+  const { data: users } = await getUsers({ pagination: false });
   return (
     <div className="grid grid-cols-1 gap-x-8 gap-y-8 p-8 md:grid-cols-3">
       <div className="px-4 sm:px-0">

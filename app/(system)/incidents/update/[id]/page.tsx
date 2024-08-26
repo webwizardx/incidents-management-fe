@@ -47,7 +47,7 @@ export default async function UpdateIncident({
     incidentId: id,
     include: ['user'],
   });
-  const { data: users } = await getUsers();
+  const { data: users } = await getUsers({ pagination: false });
 
   return (
     <div className="grid p-8">
