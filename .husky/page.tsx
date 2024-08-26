@@ -3,23 +3,23 @@ import { Action } from '@/app/enum/action.enum';
 import { checkCurrentPermissions } from '@/app/login/actions';
 import { auth } from '@/auth';
 import { Metadata } from 'next';
-import { getCategories } from '../../(configuration)/categories/actions';
-import { getUsers } from '../../users/actions';
-import { User } from '../../users/types';
-import { getStatus } from '../actions';
-import CreateIncidentForm from '../components/CreateIncidentForm';
+import { getCategories } from '../app/(system)/(configuration)/categories/actions';
+import { getStatus } from '../app/(system)/incidents/actions';
+import CreateIncidentForm from '../app/(system)/incidents/components/CreateIncidentForm';
+import { getUsers } from '../app/(system)/users/actions';
+import { User } from '../app/(system)/users/types';
 
 export const metadata: Metadata = {
   title: 'Creación de Incidente',
 };
 
-export default async function Create() {
+export default async function CreateIncident() {
   const session: any = await auth();
   const ownerId = session?.user?.id?.toString();
-  const [firstName, lastName] = session?.user?.name?.split(' ') || [];
   const isAdmin = session?.user?.role?.id === 1;
+  const [firstName, lastName] = session?.user?.name?.split(' ') || [];
   const user = {
-    id: session?.user?.id,
+    id: ownerId,
     firstName,
     lastName,
   } as User;
@@ -34,10 +34,10 @@ export default async function Create() {
 
   const { data: categories } = await getCategories();
   const { data: status } = await getStatus();
-  const { data: users } = await getUsers();
+  const { data: users } = await getUsers({ roleId: 2 });
   return (
-    <div className="grid grid-cols-1 gap-x-8 gap-y-8 p-8 md:grid-cols-3">
-      <div className="px-4 sm:px-0">
+    <div className="grid p-8">
+      <div className="mb-4 px-4 sm:px-0">
         <h2 className="text-base font-semibold leading-7 text-gray-900">
           Incidente
         </h2>
@@ -46,13 +46,15 @@ export default async function Create() {
         </p>
       </div>
 
-      <CreateIncidentForm
-        categories={categories}
-        isAdmin={isAdmin}
-        ownerId={ownerId}
-        status={status}
-        users={[user, ...users]}
-      />
+      <div className="mx-auto w-full max-w-xl">
+        <CreateIncidentForm
+          categories={categories}
+          isAdmin={isAdmin}
+          ownerId={ownerId}
+          status={status}
+          users={[user, ...users]}
+        />
+      </div>
     </div>
   );
 }

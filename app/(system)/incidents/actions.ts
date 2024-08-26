@@ -277,7 +277,6 @@ export async function updateIncident(
     const url = new URL(
       `${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/incidents/${id}`
     );
-
     const response = await fetch(url.toString(), {
       body: JSON.stringify(cleanedPayload),
       cache: 'no-store',
@@ -294,13 +293,11 @@ export async function updateIncident(
     if (!response.ok) {
       await Promise.reject(data);
     }
-    revalidatePath('/incidents');
+    revalidatePath('/incidents/update/[id]');
     return data;
   } catch (error) {
     console.error(`[updateIncident] ERROR - ${JSON.stringify(error)}`);
     return null as any;
-  } finally {
-    redirect('/incidents');
   }
 }
 
@@ -314,6 +311,7 @@ export async function patchIncident(
     const url = new URL(
       `${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/incidents/${id}`
     );
+    console.log('cleanedPayload', cleanedPayload);
 
     const response = await fetch(url.toString(), {
       body: JSON.stringify(cleanedPayload),
@@ -332,13 +330,11 @@ export async function patchIncident(
       await Promise.reject(data);
     }
 
-    revalidatePath('/incidents');
+    revalidatePath('/incidents/update/[id]');
     return data;
   } catch (error) {
     console.error(`[patchIncident] ERROR - ${JSON.stringify(error)}`);
     return null as any;
-  } finally {
-    redirect('/incidents');
   }
 }
 
@@ -370,7 +366,5 @@ export async function deleteIncident(id: number): Promise<Incident> {
   } catch (error) {
     console.error(`[patchIncident] ERROR - ${JSON.stringify(error)}`);
     return null as any;
-  } finally {
-    redirect('/incidents');
   }
 }

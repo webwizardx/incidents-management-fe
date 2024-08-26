@@ -43,6 +43,8 @@ export default async function Incidents({
   const query = { ...DEFAULT_QUERY, ...searchParams };
   const session: any = await auth();
   const isAdmin = session?.user?.role?.name === 'ADMIN';
+  const isTechnician = session?.user?.role?.name === 'TECHNICIAN';
+  const isUser = session?.user?.role?.name === 'USER';
   const roleId = session?.user?.role?.id;
   const userId = session?.user?.id;
 
@@ -107,9 +109,10 @@ export default async function Incidents({
               <thead>
                 <tr>
                   {HEADERS.map((header) => {
-                    const adminHeaders = ['Propietario', 'Asignado'];
-                    if (!isAdmin && adminHeaders.includes(header)) return null;
-
+                    if (header === 'Propietario' && !isAdmin && !isTechnician)
+                      return null;
+                    if (header === 'Asignado' && !isAdmin && !isUser)
+                      return null;
                     return (
                       <th
                         className="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900"
@@ -145,17 +148,17 @@ export default async function Incidents({
                         {incident.status?.name?.toUpperCase()}
                       </span>
                     </td>
-                    {isAdmin ? (
-                      <>
-                        <td className="whitespace-nowrap p-2 text-sm">
-                          {incident.owner?.firstName} {incident.owner?.lastName}
-                        </td>
-                        <td className="whitespace-nowrap p-2 text-sm">
-                          {incident.assignee
-                            ? `${incident.assignee.firstName} ${incident.assignee.lastName}`
-                            : 'Sin asignar'}
-                        </td>
-                      </>
+                    {isAdmin || isTechnician ? (
+                      <td className="whitespace-nowrap p-2 text-sm">
+                        {incident.owner?.firstName} {incident.owner?.lastName}
+                      </td>
+                    ) : null}
+                    {isAdmin || isUser ? (
+                      <td className="whitespace-nowrap p-2 text-sm">
+                        {incident.assignee
+                          ? `${incident.assignee.firstName} ${incident.assignee.lastName}`
+                          : 'Sin asignar'}
+                      </td>
                     ) : null}
                     <td className="whitespace-nowrap p-2 text-sm">
                       <ActionsMenu incident={incident} roleId={roleId} />

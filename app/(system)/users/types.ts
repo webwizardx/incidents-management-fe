@@ -3,7 +3,7 @@ import { Query } from '@/app/types';
 export type QueryRole = Query<Partial<Role>>;
 
 export type QueryUser = Query<
-  Omit<Partial<User>, 'role'> & { include?: 'role' }
+  Omit<Partial<User>, 'role'> & { include?: 'role'; pagination?: boolean }
 >;
 
 export type Role = {

@@ -1,4 +1,6 @@
 import { notAuthorized } from '@/app/(system)/not-authorized';
+import { getUsers } from '@/app/(system)/users/actions';
+import { User } from '@/app/(system)/users/types';
 import DefaultUserSVG from '@/app/components/DefaultUserSVG';
 import { Action } from '@/app/enum/action.enum';
 import { checkCurrentPermissions } from '@/app/login/actions';
@@ -30,7 +32,13 @@ export default async function UpdateIncident({
 
   const session: any = await auth();
   const userId = session?.user?.id;
-
+  const [firstName, lastName] = session?.user?.name?.split(' ') || [];
+  const isAdmin = session?.user?.role?.id === 1;
+  const user = {
+    id: session?.user?.id,
+    firstName,
+    lastName,
+  } as User;
   const incident = await getIncident(id);
   if (!incident) {
     return redirect('/incidents');
@@ -39,6 +47,7 @@ export default async function UpdateIncident({
     incidentId: id,
     include: ['user'],
   });
+  const { data: users } = await getUsers();
 
   return (
     <div className="grid p-8">
@@ -48,7 +57,14 @@ export default async function UpdateIncident({
         </h2>
       </div>
       <div className="mx-auto mb-20 w-full max-w-xl">
-        <UpdateIncidentForm incidentId={incident.id} userId={userId} />
+        <UpdateIncidentForm
+          assignedTo={incident.assignedTo?.toString()}
+          incidentId={incident.id}
+          isAdmin={isAdmin}
+          ownerId={incident.ownerId?.toString()}
+          users={[user, ...users]}
+          userId={userId}
+        />
       </div>
       <ul role="list" className="space-y-6">
         {data.map((comment, i) => (

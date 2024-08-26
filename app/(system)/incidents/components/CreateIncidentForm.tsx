@@ -4,18 +4,27 @@ import { Spinner, Tiptap } from '@/app/components';
 import { capitalizeString } from '@/helpers';
 import { Field, Fieldset, Input, Label, Select } from '@headlessui/react';
 import { useFormik } from 'formik';
+import { useMemo } from 'react';
 import { z } from 'zod';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
+import { User } from '../../users/types';
 import { createIncident } from '../actions';
 import { Category, Status } from '../types';
 
 type Props = {
   categories: Category[];
+  isAdmin?: boolean;
   ownerId: string;
   status: Status[];
+  users?: User[];
 };
 
 const incidentSchema = z.object({
+  assignedTo: z
+    .string({
+      required_error: 'El asignado de la incidencia es requerida',
+    })
+    .optional(),
   categoryId: z.string({
     required_error: 'La categoría es requerida',
   }),
@@ -35,8 +44,10 @@ const incidentSchema = z.object({
 
 export default function CreateIncidentForm({
   categories,
+  isAdmin = false,
   ownerId,
   status,
+  users = [],
 }: Props) {
   const formik = useFormik({
     initialValues: {
@@ -51,6 +62,10 @@ export default function CreateIncidentForm({
       await createIncident(values);
     },
   });
+  const technicians = useMemo(
+    () => users.filter((user) => user.roleId === 2),
+    [users]
+  );
 
   const handleCommentChange = (content: string) => {
     formik.setFieldValue('comment', content);
@@ -98,6 +113,51 @@ export default function CreateIncidentForm({
             ) : null}
           </Field>
         </div>
+        {isAdmin ? (
+          <div className="grid grid-cols-2 gap-4">
+            <Field>
+              <Label className="block text-sm font-medium leading-6 text-gray-900">
+                Propetario
+              </Label>
+              <Select
+                className="block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                {...formik.getFieldProps('ownerId')}
+              >
+                {users.map((user) => (
+                  <option key={user?.id} value={user?.id}>
+                    {capitalizeString(`${user?.firstName} ${user?.lastName}`)}
+                  </option>
+                ))}
+              </Select>
+              {formik.touched.ownerId && formik.errors.ownerId ? (
+                <small className="text-sm text-red-500">
+                  {formik.errors.ownerId as string}
+                </small>
+              ) : null}
+            </Field>
+            <Field>
+              <Label className="block text-sm font-medium leading-6 text-gray-900">
+                Asignado
+              </Label>
+              <Select
+                className="block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                {...formik.getFieldProps('assignedTo')}
+              >
+                <option value="">Auto Asignar</option>
+                {technicians.map((user) => (
+                  <option key={user?.id} value={user?.id}>
+                    {capitalizeString(`${user?.firstName} ${user?.lastName}`)}
+                  </option>
+                ))}
+              </Select>
+              {formik.touched.assignedTo && formik.errors.assignedTo ? (
+                <small className="text-sm text-red-500">
+                  {formik.errors.assignedTo as string}
+                </small>
+              ) : null}
+            </Field>
+          </div>
+        ) : null}
         <div>
           <Label className="mb-4 block text-sm font-medium leading-6 text-gray-900">
             Comentario
