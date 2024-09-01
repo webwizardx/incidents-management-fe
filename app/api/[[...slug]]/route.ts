@@ -75,10 +75,24 @@ export async function GET(
 
   console.log(`[/api] ${GET.name} - ${JSON.stringify(DEBUG_INFO)}`);
 
-  return NextResponse.json(await response.json(), {
-    status: response.status,
-    statusText: response.statusText,
-  });
+  const contentType = response.headers.get('content-type');
+
+  if (contentType?.includes('application/pdf')) {
+    const contentDisposition = response.headers.get(
+      'content-disposition'
+    ) as string;
+    return new Response(response.body, {
+      headers: {
+        'Content-Disposition': contentDisposition,
+        'Content-Type': 'application/pdf',
+      },
+    });
+  } else {
+    return NextResponse.json(await response.json(), {
+      status: response.status,
+      statusText: response.statusText,
+    });
+  }
 }
 
 export async function PATCH(

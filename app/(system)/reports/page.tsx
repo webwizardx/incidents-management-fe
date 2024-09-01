@@ -21,9 +21,15 @@ export default async function Reports() {
           </h1>
         </div>
       </div>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <IncidentsStatusChart data={incidentsStatusCount} />
-        <AssignedIncidentsChart data={assignedIncidentsChart} />
+      <div className="grid grid-cols-1 gap-20">
+        <IncidentsStatusChart
+          data={incidentsStatusCount}
+          exportUrl={`${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/incidents/status-count-for-chart/export/pdf`}
+        />
+        <AssignedIncidentsChart
+          data={assignedIncidentsChart}
+          exportUrl={`${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/incidents/assigned-incidents-count-for-chart/export/pdf`}
+        />
       </div>
     </div>
   );
