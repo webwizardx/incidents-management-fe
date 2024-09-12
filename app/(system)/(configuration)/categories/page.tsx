@@ -16,6 +16,7 @@ const DEFAULT_QUERY: QueryCategory = {
   limit: 25,
   name: '',
   order: Order.ASC,
+  orderBy: 'id',
   page: 1,
 };
 

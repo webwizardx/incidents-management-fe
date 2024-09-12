@@ -1,3 +1,4 @@
+import { getCategories } from '@/app/(system)/(configuration)/categories/actions';
 import { notAuthorized } from '@/app/(system)/not-authorized';
 import { getUsers } from '@/app/(system)/users/actions';
 import { User } from '@/app/(system)/users/types';
@@ -39,6 +40,7 @@ export default async function UpdateIncident({
     firstName,
     lastName,
   } as User;
+  const { data: categories } = await getCategories();
   const incident = await getIncident(id);
   if (!incident) {
     return redirect('/incidents');
@@ -59,9 +61,9 @@ export default async function UpdateIncident({
       <div className="mx-auto mb-20 w-full max-w-xl">
         <UpdateIncidentForm
           assignedTo={incident.assignedTo?.toString()}
-          incidentId={incident.id}
+          categories={categories}
+          incident={incident}
           isAdmin={isAdmin}
-          ownerId={incident.ownerId?.toString()}
           users={[user, ...users]}
           userId={userId}
         />
@@ -83,7 +85,10 @@ export default async function UpdateIncident({
                 <div className="flex justify-between gap-x-4">
                   <div className="py-0.5 text-xs leading-5 text-gray-500">
                     <span className="font-medium text-gray-900">{`${comment?.user?.firstName} ${comment?.user?.lastName}`}</span>{' '}
-                    ha comentado
+                    ha comentado{' '}
+                    {`${new Date(comment.createdAt).getHours()}:${new Date(
+                      comment.createdAt
+                    ).getMinutes()}`}
                   </div>
                   <time
                     dateTime={comment.createdAt}

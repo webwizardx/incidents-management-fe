@@ -2,19 +2,20 @@
 
 import { Spinner, Tiptap } from '@/app/components';
 import { capitalizeString } from '@/helpers';
-import { Field, Fieldset, Label, Select } from '@headlessui/react';
+import { Field, Fieldset, Input, Label, Select } from '@headlessui/react';
 import { useFormik } from 'formik';
 import { useMemo } from 'react';
 import { z } from 'zod';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { User } from '../../users/types';
 import { createComment, patchIncident } from '../actions';
+import { Category, Incident } from '../types';
 
 type Props = {
   assignedTo: string;
-  incidentId: number;
+  categories: Category[];
+  incident: Incident;
   isAdmin?: boolean;
-  ownerId: string;
   userId: number;
   users?: User[];
 };
@@ -25,6 +26,9 @@ const commentSchema = z.object({
       required_error: 'El asignado de la incidencia es requerida',
     })
     .optional(),
+  categoryId: z.string({
+    required_error: 'La categoría es requerida',
+  }),
   content: z
     .string({
       required_error: 'El comentario es requerido',
@@ -45,30 +49,37 @@ const commentSchema = z.object({
   userId: z.string({
     required_error: 'El dueño del comentario es requerido',
   }),
+  title: z.string({
+    required_error: 'El título de la incidencia es requerido',
+  }),
 });
 
 export default function UpdateIncidentForm({
   assignedTo,
-  incidentId,
+  categories,
+  incident,
   isAdmin = false,
-  ownerId,
   users = [],
   userId,
 }: Props) {
   const formik = useFormik({
     initialValues: {
       assignedTo,
+      categoryId: incident?.categoryId?.toString() || '',
       content: '',
       imageUrl: '',
-      incidentId: incidentId.toString(),
-      ownerId,
+      incidentId: incident.id.toString() || '',
+      ownerId: incident.ownerId?.toString() || '',
       userId: userId.toString(),
+      title: incident.title || '',
     },
     validationSchema: toFormikValidationSchema(commentSchema),
     onSubmit: async (values) => {
       const {
         assignedTo: newAssignedTo,
+        categoryId,
         ownerId: newOwnerId,
+        title,
         ...comment
       } = values;
       if (comment.content) {
@@ -77,10 +88,15 @@ export default function UpdateIncidentForm({
         handleCommentChange('');
       }
 
-      await patchIncident(incidentId, {
+      await patchIncident(incident.id, {
         assignedTo:
           newAssignedTo !== assignedTo ? Number(newAssignedTo) : undefined,
-        ownerId: newOwnerId !== ownerId ? Number(newOwnerId) : undefined,
+        categoryId: Number(categoryId),
+        ownerId:
+          newOwnerId !== incident.ownerId?.toString()
+            ? Number(newOwnerId)
+            : undefined,
+        title,
       });
     },
   });
@@ -95,6 +111,42 @@ export default function UpdateIncidentForm({
   return (
     <form onSubmit={formik.handleSubmit}>
       <Fieldset className="space-y-8">
+        <div className="grid grid-cols-2 gap-4">
+          <Field>
+            <Label className="block text-sm font-medium leading-6 text-gray-900">
+              Título
+            </Label>
+            <Input
+              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              {...formik.getFieldProps('title')}
+            />
+            {formik.touched.title && formik.errors.title ? (
+              <small className="text-sm text-red-500">
+                {formik.errors.title as string}
+              </small>
+            ) : null}
+          </Field>
+          <Field>
+            <Label className="block text-sm font-medium leading-6 text-gray-900">
+              Categoría
+            </Label>
+            <Select
+              className="block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              {...formik.getFieldProps('categoryId')}
+            >
+              {categories.map((category) => (
+                <option key={category?.id} value={category?.id}>
+                  {capitalizeString(category?.name)}
+                </option>
+              ))}
+            </Select>
+            {formik.touched.categoryId && formik.errors.categoryId ? (
+              <small className="text-sm text-red-500">
+                {formik.errors.categoryId as string}
+              </small>
+            ) : null}
+          </Field>
+        </div>
         {isAdmin ? (
           <div className="grid grid-cols-2 gap-4">
             <Field>
