@@ -27,7 +27,8 @@ const HEADERS = [
 const DEFAULT_QUERY: QueryIncident = {
   include: ['assignee', 'category', 'owner', 'status'],
   limit: 25,
-  order: Order.ASC,
+  order: Order.DESC,
+  orderBy: 'id',
   page: 1,
 };
 

@@ -83,7 +83,7 @@ export default async function UpdateIncident({
                 <div className="flex justify-between gap-x-4">
                   <div className="py-0.5 text-xs leading-5 text-gray-500">
                     <span className="font-medium text-gray-900">{`${comment?.user?.firstName} ${comment?.user?.lastName}`}</span>{' '}
-                    commented
+                    ha comentado
                   </div>
                   <time
                     dateTime={comment.createdAt}

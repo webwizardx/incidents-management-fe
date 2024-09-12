@@ -20,6 +20,7 @@ const DEFAULT_QUERY: QueryUser = {
   order: Order.ASC,
   page: 1,
 };
+3;
 
 export default async function Users({
   searchParams = {},

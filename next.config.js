@@ -8,6 +8,10 @@ const nextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'scontent.fccs4-2.fna.fbcdn.net',
+      },
+      {
+        protocol: 'https',
         hostname: 'tailwindui.com',
       },
     ],
