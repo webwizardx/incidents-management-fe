@@ -4,6 +4,7 @@ import { ExclamationCircleIcon } from '@heroicons/react/20/solid';
 import Image from 'next/image';
 import { useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
+import mercantilBg from '../../public/mercantil-bg.webp';
 import { ShowPasswordIcon } from '../components';
 import { authenticate } from './actions';
 
@@ -11,9 +12,6 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [state, dispatch] = useFormState(authenticate, undefined);
   const { pending } = useFormStatus();
-  const [image, setImage] = useState(
-    'https://scontent.fccs4-2.fna.fbcdn.net/v/t39.30808-6/347302084_1424179741728692_7186710037664444438_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=86c6b0&_nc_ohc=CmJFJGOIaeYQ7kNvgGSI9Tc&_nc_ht=scontent.fccs4-2.fna&_nc_gid=ACwZ8v22v9NC6D53QytXNDC&oh=00_AYBuR456CqFvXMR--h9Btqy_wFx05mWWR8IuuC__MCthAA&oe=66E820A9'
-  );
 
   return (
     <main className="flex min-h-screen flex-1">
@@ -122,12 +120,7 @@ export default function Login() {
           alt=""
           className="absolute inset-0 h-full w-full object-cover"
           fill={true}
-          onError={() =>
-            setImage(
-              'https://images.unsplash.com/photo-1496917756835-20cb06e75b4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1908&q=80'
-            )
-          }
-          src={image}
+          src={mercantilBg}
         />
       </div>
     </main>
