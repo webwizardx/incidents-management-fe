@@ -37,17 +37,23 @@ export default function Alert({
     danger: {
       text: 'text-red-800',
       bg: 'bg-red-100',
+      'bg-button': 'bg-red-800',
       hover: 'hover:bg-red-200',
+      'hover-button': 'hover:bg-red-900',
     },
     success: {
       text: 'text-green-800',
       bg: 'bg-green-50',
+      'bg-button': 'bg-green-50',
       hover: 'hover:bg-green-100',
+      'hover-button': 'hover:bg-green-100',
     },
     warning: {
       text: 'text-yellow-800',
       bg: 'bg-yellow-100',
+      'bg-button': 'bg-yellow-100',
       hover: 'hover:bg-yellow-200',
+      'hover-button': 'hover:bg-yellow-902000',
     },
   };
 
@@ -116,7 +122,7 @@ export default function Alert({
               <button
                 type="button"
                 onClick={() => onConfirm?.()}
-                className={`inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm transition-colors sm:ml-3 sm:w-auto ${colors[type].text} ${colors[type].hover} ${colors[type].bg}`}
+                className={`inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm transition-colors sm:ml-3 sm:w-auto ${colors[type].text} ${colors[type]['hover-button']} ${colors[type]['bg-button']}`}
               >
                 {confirmText}
               </button>

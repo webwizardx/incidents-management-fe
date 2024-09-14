@@ -17,7 +17,8 @@ const HEADERS = ['ID', 'Nombre', 'Apellido', 'Correo', 'Rol', 'Acciones'];
 const DEFAULT_QUERY: QueryUser = {
   include: 'role',
   limit: 25,
-  order: Order.ASC,
+  order: Order.DESC,
+  orderBy: 'id',
   page: 1,
 };
 3;

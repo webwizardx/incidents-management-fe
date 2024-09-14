@@ -62,22 +62,22 @@ export default function Pagination({
           disabled={isFirstPage}
           onClick={() => setPage(page - 1)}
         >
-          Previous
+          Anterior
         </button>
         <button
           className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
           disabled={isLastPage}
           onClick={() => setPage(page + 1)}
         >
-          Next
+          Siguiente
         </button>
       </div>
       <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
         <div>
           <p className="text-sm text-gray-700">
-            Showing <span className="font-medium">{fromValue}</span> to{' '}
-            <span className="font-medium">{toValue}</span> of{' '}
-            <span className="font-medium">{totalCount}</span> results
+            Mostrando <span className="font-medium">{fromValue}</span> a{' '}
+            <span className="font-medium">{toValue}</span> de{' '}
+            <span className="font-medium">{totalCount}</span> resultados
           </p>
         </div>
         <div>
@@ -93,7 +93,7 @@ export default function Pagination({
               disabled={isFirstPage}
               onClick={() => setPage()}
             >
-              <span className="sr-only">Previous</span>
+              <span className="sr-only">Anterior</span>
               <ChevronDoubleLeftIcon className="h-5 w-5" aria-hidden="true" />
             </button>
             <button
@@ -104,7 +104,7 @@ export default function Pagination({
               disabled={isFirstPage}
               onClick={() => setPage(page - 1)}
             >
-              <span className="sr-only">Previous</span>
+              <span className="sr-only">Anterior</span>
               <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
             </button>
             {/* Current: "z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600", Default: "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0" */}
@@ -131,7 +131,7 @@ export default function Pagination({
               disabled={isLastPage}
               onClick={() => setPage(page + 1)}
             >
-              <span className="sr-only">Next</span>
+              <span className="sr-only">Siguiente</span>
               <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
             </button>
             <button
@@ -142,7 +142,7 @@ export default function Pagination({
               disabled={isLastPage}
               onClick={() => setPage(lastPage)}
             >
-              <span className="sr-only">Next</span>
+              <span className="sr-only">Siguiente</span>
               <ChevronDoubleRightIcon className="h-5 w-5" aria-hidden="true" />
             </button>
           </nav>
